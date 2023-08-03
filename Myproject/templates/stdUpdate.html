@@ -1,0 +1,631 @@
+
+
+{% load static %} <!-- Load the static template tag -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Student Update form</title>
+    <!-- Latest compiled and minified CSS -->
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+    />
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <style>
+      .main {
+        background-image: url({% static 'img/bg_students.bbae6663.jpg' %});
+      }
+      * {
+        font-size: large;
+        color: #961e64;
+      }
+      .form-control {
+        height: auto !important;
+      }
+      .input-group-addon,
+      .input-group-btn {
+        width: auto !important;
+      }
+    </style>
+</head>
+<body class="main p-4">
+    <div class="container">
+      <form
+        class="well form-horizontal"
+        action="/stdUpdateForm/"
+        method="post"
+        id="contact_form"
+        enctype="multipart/form-data"
+      >
+        {% csrf_token %} <!-- Add CSRF token to protect against Cross-Site Request Forgery attacks -->
+        <fieldset>
+          <!-- Form Name -->
+          <legend>
+            <button class="btn btn-lg btn-danger">
+              <a href="{% url 'stdHome' %}">Back</a>
+            </button>
+            {% if error_message %}
+                <div class="alert text-center alert-danger" role="alert">
+                 <p>{{ error_message }}</P>
+                </div>
+              {% endif %}
+              {% if success_message %}
+              <div class="alert alert-success text-center" role="alert">
+                  <h2><strong>Success!</strong></h2>
+                  <p>{{ success_message }}</p>
+              </div>
+              {% endif %}
+            <div>
+              <h1 class="text-center">
+                <b>Student Update Form</b>
+              </h1>
+            </div>
+          </legend>
+
+          <!-- Text input-->
+          <h1>
+            <b><i>Personal Information</i></b>
+          </h1>
+          <!-- Add Django form fields using template tags -->
+          <div class="form-group">
+            <label class="col-md-4 control-label">First Name</label>
+            <div class="col-md-4 inputGroupContainer">
+              <div class="input-group">
+                <span class="input-group-addon"
+                  ><i class="glyphicon glyphicon-user"></i
+                ></span>
+                <input
+                  name="first_name"
+                  placeholder="First Name"
+                  class="form-control"
+                  type="text"
+                />
+              </div>
+            </div>
+          </div>
+
+           <!-- Text input-->
+
+           <div class="form-group">
+            <label class="col-md-4 control-label">Last Name</label>
+            <div class="col-md-4 inputGroupContainer">
+              <div class="input-group">
+                <span class="input-group-addon"
+                  ><i class="glyphicon glyphicon-user"></i
+                ></span>
+                <input
+                  name="last_name"
+                  placeholder="Last Name"
+                  class="form-control"
+                  type="text"
+                />
+              </div>
+            </div>
+          </div>
+          <!-- D.O.G -->
+
+          <div class="form-group">
+            <label class="col-md-4 control-label">D.O.B</label>
+            <div class="col-md-4 inputGroupContainer">
+              <div class="input-group">
+                <span class="input-group-addon"
+                  ><i class="glyphicon glyphicon-calendar"></i
+                ></span>
+                <input name="dob" type="date" />
+              </div>
+            </div>
+          </div>
+
+          <!-- CNIC -->
+
+          <div class="form-group">
+            <label class="col-md-4 control-label">CNIC</label>
+            <div class="col-md-4 inputGroupContainer">
+              <div class="input-group">
+                <span class="input-group-addon"
+                  ><i class="glyphicon glyphicon-asterisk"></i
+                ></span>
+                <input
+                  name="cnic"
+                  placeholder="123456789123"
+                  class="form-control"
+                  type="text"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- radio checks Gender -->
+          <div class="form-group">
+            <label class="col-md-4 control-label">Gender</label>
+            <div class="col-md-4">
+              <div class="radio">
+                <label>
+                  <input type="radio" name="gender" value="Male" /> Male
+                </label>
+                <label>
+                  <input type="radio" name="gender" value="Female" />Female
+                </label>
+                <label>
+                  <input type="radio" name="gender" value="Other" />Other
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Text input-->
+          <div class="form-group">
+            <label class="col-md-4 control-label">E-Mail</label>
+            <div class="col-md-4 inputGroupContainer">
+              <div class="input-group">
+                <span class="input-group-addon"
+                  ><i class="glyphicon glyphicon-envelope"></i
+                ></span>
+                <input
+                  name="email"
+                  placeholder="E-Mail Address"
+                  class="form-control"
+                  type="text"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-md-4 control-label">Password</label>
+            <div class="col-md-4 inputGroupContainer">
+              <div class="input-group">
+                <span class="input-group-addon"
+                  ><i class="glyphicon glyphicon-envelope"></i
+                ></span>
+                <input
+                  name="password"
+                  placeholder="Password"
+                  class="form-control"
+                  type="password"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Text input-->
+
+          <div class="form-group">
+            <label class="col-md-4 control-label">Phone #</label>
+            <div class="col-md-4 inputGroupContainer">
+              <div class="input-group">
+                <span class="input-group-addon"
+                  ><i class="glyphicon glyphicon-earphone"></i
+                ></span>
+                <input
+                  name="phone"
+                  placeholder="03131234567"
+                  class="form-control"
+                  type="text"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Select Basic -->
+
+          <div class="form-group">
+            <label class="col-md-4 control-label">Province</label>
+            <div class="col-md-4 selectContainer">
+              <div class="input-group">
+                <span class="input-group-addon"
+                  ><i class="glyphicon glyphicon-list"></i
+                ></span>
+                <select name="province" class="form-control selectpicker">
+                  <option value=" ">Province</option>
+                  <option>Punjab</option>
+                  <option>Sindh</option>
+                  <option>Baluchistan</option>
+                  <option>Peshawar</option>
+                  <option>Ex-Fata</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Text input-->
+
+          <div class="form-group">
+            <label class="col-md-4 control-label">City</label>
+            <div class="col-md-4 inputGroupContainer">
+              <div class="input-group">
+                <span class="input-group-addon"
+                  ><i class="glyphicon glyphicon-home"></i
+                ></span>
+                <input
+                  name="city"
+                  placeholder="city"
+                  class="form-control"
+                  type="text"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Text input-->
+
+          <div class="form-group">
+            <label class="col-md-4 control-label">Zip Code</label>
+            <div class="col-md-4 inputGroupContainer">
+              <div class="input-group">
+                <span class="input-group-addon"
+                  ><i class="glyphicon glyphicon-home"></i
+                ></span>
+                <input
+                  name="zip_code"
+                  placeholder="Zip Code"
+                  class="form-control"
+                  type="text"
+                />
+              </div>
+            </div>
+          </div>
+          <!-- Text input-->
+
+          <div class="form-group">
+            <label class="col-md-4 control-label">Address</label>
+            <div class="col-md-4 inputGroupContainer">
+              <div class="input-group">
+                <span class="input-group-addon"
+                  ><i class="glyphicon glyphicon-home"></i
+                ></span>
+                <input
+                  name="address"
+                  placeholder="Address"
+                  class="form-control"
+                  type="text"
+                />
+              </div>
+            </div>
+          </div>
+          <br />
+          <hr />
+
+          <!-- Educational Background -->
+
+          <h1>
+            <b><i>Education Records</i></b>
+          </h1>
+          <!-- Intermediate -->
+          <div class="form-group">
+            <label class="col-md-4 control-label">Intermediate</label>
+            <div class="col-md-4 selectContainer">
+              <div class="input-group">
+                <span class="input-group-addon"
+                  ><i class="glyphicon glyphicon-list"></i
+                ></span>
+                <select name="intermediate" class="form-control selectpicker">
+                  <option value=" ">Select</option>
+                  <option>FSc pre-medical</option>
+                  <option>Fsc-Pre-engineering</option>
+                  <option>ICS</option>
+                  <option>ICOM</option>
+                  <option>A levels</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <!-- Text input-->
+
+          <div class="form-group">
+            <label class="col-md-4 control-label">College Name</label>
+            <div class="col-md-4 inputGroupContainer">
+              <div class="input-group">
+                <span class="input-group-addon"
+                  ><i class="glyphicon glyphicon-education"></i
+                ></span>
+                <input
+                  name="college_name"
+                  placeholder="xyz"
+                  class="form-control"
+                  type="text"
+                />
+              </div>
+            </div>
+          </div>
+          <!-- D.O.B -->
+
+          <div class="form-group">
+            <label class="col-md-4 control-label">College Graduation Date</label>
+            <div class="col-md-4 inputGroupContainer">
+              <div class="input-group">
+                <span class="input-group-addon"
+                  ><i class="glyphicon glyphicon-calendar"></i
+                ></span>
+                <input name="college_graduation_date" type="date" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Obtained marks -->
+
+          <div class="form-group">
+            <label class="col-md-4 control-label">Obtained marks</label>
+            <div class="col-md-4 inputGroupContainer">
+              <div class="input-group">
+                <span class="input-group-addon"
+                  ><i class="glyphicon glyphicon-education"></i
+                ></span>
+                <input
+                  name="inter_obtained_marks"
+                  placeholder="0-1100"
+                  class="form-control"
+                  type="number"
+                />
+              </div>
+            </div>
+          </div>
+          <!-- Total marks -->
+
+          <div class="form-group">
+            <label class="col-md-4 control-label">Total marks</label>
+            <div class="col-md-4 inputGroupContainer">
+              <div class="input-group">
+                <span class="input-group-addon"
+                  ><i class="glyphicon glyphicon-education"></i
+                ></span>
+                <input
+                  name="inter_total_marks"
+                  placeholder="0-1100"
+                  class="form-control"
+                  type="number"
+                />
+              </div>
+            </div>
+          </div>
+          <!-- Matriculation -->
+          <div class="form-group">
+            <label class="col-md-4 control-label">Matriculation</label>
+            <div class="col-md-4 selectContainer">
+              <div class="input-group">
+                <span class="input-group-addon"
+                  ><i class="glyphicon glyphicon-list"></i
+                ></span>
+                <select name="matriculation" class="form-control selectpicker">
+                  <option value=" ">Select</option>
+                  <option>Science</option>
+                  <option>Arts</option>
+                  <option>O levels</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <!-- Text input-->
+
+          <div class="form-group">
+            <label class="col-md-4 control-label">School Name</label>
+            <div class="col-md-4 inputGroupContainer">
+              <div class="input-group">
+                <span class="input-group-addon"
+                  ><i class="glyphicon glyphicon-education"></i
+                ></span>
+                <input
+                  name="school_name"
+                  placeholder="xyz"
+                  class="form-control"
+                  type="text"
+                />
+              </div>
+            </div>
+          </div>
+          <!-- D.O.B -->
+
+          <div class="form-group">
+            <label class="col-md-4 control-label">Matric Graduation Date</label>
+            <div class="col-md-4 inputGroupContainer">
+              <div class="input-group">
+                <span class="input-group-addon"
+                  ><i class="glyphicon glyphicon-calendar"></i
+                ></span>
+                <input name="matric_graduation_date"type="date" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Obtained marks -->
+
+          <div class="form-group">
+            <label class="col-md-4 control-label">Obtained marks</label>
+            <div class="col-md-4 inputGroupContainer">
+              <div class="input-group">
+                <span class="input-group-addon"
+                  ><i class="glyphicon glyphicon-education"></i
+                ></span>
+                <input
+                  name="matric_obtained-marks"
+                  placeholder="0-1100"
+                  class="form-control"
+                  type="number"
+                />
+              </div>
+            </div>
+          </div>
+          <!-- Total marks -->
+
+          <div class="form-group">
+            <label class="col-md-4 control-label">Total marks</label>
+            <div class="col-md-4 inputGroupContainer">
+              <div class="input-group">
+                <span class="input-group-addon"
+                  ><i class="glyphicon glyphicon-education"></i
+                ></span>
+                <input
+                  name="matric_total-marks"
+                  placeholder="0-1100"
+                  class="form-control"
+                  type="number"
+                />
+              </div>
+            </div>
+          </div>
+          <br />
+          <hr />
+          <!-- DOCUMENTS -->
+          <!-- Educational Background -->
+
+          <h1>
+            <b><i>Documents</i></b>
+          </h1>
+          <!-- Intermediate -->
+          <!-- photo input-->
+
+          <div class="form-group">
+            <label class="col-md-4 control-label">Photo</label>
+            <div class="col-md-4 inputGroupContainer">
+              <div class="input-group">
+                <span class="input-group-addon"
+                  ><i class="glyphicon glyphicon-education"></i
+                ></span>
+                <input
+                  name="self_photo"
+                  placeholder="xyz"
+                  class="form-control"
+                  type="file"
+                />
+              </div>
+            </div>
+          </div>
+          <!-- CNIC Photo input-->
+
+          <div class="form-group">
+            <label class="col-md-4 control-label">ID card Photo</label>
+            <div class="col-md-4 inputGroupContainer">
+              <div class="input-group">
+                <span class="input-group-addon"
+                  ><i class="glyphicon glyphicon-education"></i
+                ></span>
+                <input
+                  name="id_card_photo"
+                  placeholder="xyz"
+                  class="form-control"
+                  type="file"
+                />
+              </div>
+            </div>
+          </div>
+          <!-- inter-transcript input-->
+
+          <div class="form-group">
+            <label class="col-md-4 control-label"
+              >Intermediate Transcript</label
+            >
+            <div class="col-md-4 inputGroupContainer">
+              <div class="input-group">
+                <span class="input-group-addon"
+                  ><i class="glyphicon glyphicon-education"></i
+                ></span>
+                <input
+                  name="inter_transcript"
+                  placeholder="xyz"
+                  class="form-control"
+                  type="file"
+                />
+              </div>
+            </div>
+          </div>
+          <!-- Inter-degree -->
+          <div class="form-group">
+            <label class="col-md-4 control-label">Intermediate Degree</label>
+            <div class="col-md-4 inputGroupContainer">
+              <div class="input-group">
+                <span class="input-group-addon"
+                  ><i class="glyphicon glyphicon-education"></i
+                ></span>
+                <input
+                  name="inter_degree"
+                  placeholder="xyz"
+                  class="form-control"
+                  type="file"
+                />
+              </div>
+            </div>
+          </div>
+          <!-- matric-trasncript -->
+          <div class="form-group">
+            <label class="col-md-4 control-label">Metric transcript</label>
+            <div class="col-md-4 inputGroupContainer">
+              <div class="input-group">
+                <span class="input-group-addon"
+                  ><i class="glyphicon glyphicon-education"></i
+                ></span>
+                <input
+                  name="matric_transcript"
+                  placeholder="xyz"
+                  class="form-control"
+                  type="file"
+                />
+              </div>
+            </div>
+          </div>
+          <!-- matric-degree -->
+          <div class="form-group">
+            <label class="col-md-4 control-label">Metric Degree</label>
+            <div class="col-md-4 inputGroupContainer">
+              <div class="input-group">
+                <span class="input-group-addon"
+                  ><i class="glyphicon glyphicon-education"></i
+                ></span>
+                <input
+                  name="matric_degree"
+                  placeholder="xyz"
+                  class="form-control"
+                  type="file"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Button -->
+          <div class="form-group">
+            <label class="col-md-4 control-label"></label>
+            <div class="col-md-4 text-center">
+              <button type="submit" class="btn btn-lg btn-warning">Update Records</button>
+            </div>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+
+    <!-- /.container -->
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"
+    ></script>
+</body>
+</html>

@@ -1,0 +1,238 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Apply for Admissions</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<style>
+    .main {
+        background-image: url({% static "img/bg_students.bbae6663.jpg" %});
+    }
+    * {
+        font-size: large;
+        color: #961e64;
+    }
+    .form-control {
+        height: auto !important;
+    }
+    .input-group-addon,
+    .input-group-btn {
+        width: auto !important;
+    }
+</style>
+
+<body class="main p-4">
+<div class="container">
+    <form class="well form-horizontal" action="/apply_admissionSaveIntoTable/" method="post" id="contact_form">
+        {% csrf_token %}
+        <fieldset>
+            <!-- Form Name -->
+            <legend>
+                <button class="btn btn-lg btn-danger">
+                    <a href="{% url 'stdHome' %}">Back</a>
+                </button>
+                {% if error_message %}
+                <div class="alert text-center alert-danger" role="alert">
+                    <p>{{ error_message }}</p>
+                </div>
+                {% endif %}
+                {% if success_message %}
+                <div class="alert alert-success text-center" role="alert">
+                    <h2><strong>Success!</strong></h2>
+                    <p>{{ success_message }}</p>
+                </div>
+                {% endif %}
+                <h3 class="text-right">{{ stdName }}<h3>    
+                <div>
+                    <h1 class="text-center">
+                        <b>Apply for Admission</b>
+                    </h1>
+                </div>
+            </legend>
+
+            <!-- Select University -->
+            <div class="form-group">
+                <label class="col-md-4 control-label">Select University</label>
+                <div class="col-md-4 selectContainer">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
+                        {% comment %} <select name="university" class="form-control selectpicker">
+                            <option value="">-- Select University --</option>
+                            {% for admission in admissions %}
+                            <option value="{{ admission.university_name }}">{{ admission.university_name }}</option>
+                            {% endfor %}
+                        </select> {% endcomment %}
+                        <select name="university" class="form-control selectpicker" id="university-select">
+                            <option value="">-- Select University --</option>
+                            {% for admission in admissions %}
+                            <option value="{{ admission.university_name }}">{{ admission.university_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <!--Campus-->
+            <div class="form-group">
+                <label class="col-md-4 control-label">Select Campus</label>
+                <div class="col-md-4 selectContainer">
+                    <div class="input-group">
+                        <span class="input-group-addon"
+                            ><i class="glyphicon glyphicon-list"></i
+                        ></span>
+                        <select name="campus" class="form-control selectpicker">
+                            <option value="">-- Select campus --</option>
+                            {% for admission in admissions %}
+                            <option value="{{ admission.campus }}">{{ admission.campus }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!--Program-->
+            <div class="form-group">
+                <label class="col-md-4 control-label">Choose Program</label>
+                <div class="col-md-4 selectContainer">
+                    <div class="input-group">
+                        <span class="input-group-addon"
+                            ><i class="glyphicon glyphicon-list"></i
+                        ></span>
+                        <select name="program" class="form-control selectpicker">
+                            <option value="">-- Select Department --</option>
+
+                            {% for admission in admissions %}
+                            <option value="{{ admission.program }}">{{ admission.program }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Department-->
+            <div class="form-group">
+                <label class="col-md-4 control-label">Department</label>
+                <div class="col-md-4 selectContainer">
+                    <div class="input-group">
+                        <span class="input-group-addon"
+                            ><i class="glyphicon glyphicon-list"></i
+                        ></span>
+                        <select name="department" class="form-control selectpicker">
+                            <option value="">-- Select Department --</option>
+                            {% for admission in admissions %}
+                            <option value="{{ admission.department }}">{{ admission.department }}</option>
+                            {% endfor %}
+                            <!-- Add options for departments here -->
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <!-- Admission test -->
+            <div class="form-group">
+                <label class="col-md-4 control-label">Required Admission test</label>
+                <div class="col-md-4 selectContainer">
+                    <div class="input-group">
+                        <span class="input-group-addon"
+                            ><i class="glyphicon glyphicon-list"></i
+                        ></span>
+                        <select name="required_test" class="form-control selectpicker">
+                            <option value="">-- Select Test type --</option>
+
+                            {% for admission in admissions %}
+                            <option value="{{ admission.admission_test }}">{{ admission.admission_test }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <!-- TEST obtained SCORE -->
+            <div class="form-group">
+                <label class="col-md-4 control-label">Obtained marks</label>
+                <div class="col-md-4 inputGroupContainer">
+                    <div class="input-group">
+                        <span class="input-group-addon"
+                            ><i class="glyphicon glyphicon-education"></i
+                        ></span>
+                        <input
+                            name="test_obtained_marks"
+                            placeholder="1-100"
+                            class="form-control"
+                            type="number"
+                        />
+                    </div>
+                </div>
+            </div>
+            <!-- TEST TOTAL SCORE -->
+            <div class="form-group">
+                <label class="col-md-4 control-label">Total marks</label>
+                <div class="col-md-4 inputGroupContainer">
+                    <div class="input-group">
+                        <span class="input-group-addon"
+                            ><i class="glyphicon glyphicon-education"></i
+                        ></span>
+                        <input
+                            name="test_total_marks"
+                            placeholder="0-100"
+                            class="form-control"
+                            type="number"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fee slip photo -->
+            <div class="form-group">
+                <label class="col-md-4 control-label">Deposit Fee Slip</label>
+                <div class="col-md-4 inputGroupContainer">
+                    <div class="input-group">
+                        <span class="input-group-addon"
+                            ><i class="glyphicon glyphicon-education"></i
+                        ></span>
+                        <input
+                            name="fees_slip"
+                            placeholder="xyz"
+                            class="form-control"
+                            type="file"
+                        />
+                        Please Pay a fees of 1000Pkr on name of this university.Bank
+                        HBL. Account no: HBL123543445435
+                    </div>
+                </div>
+            </div>
+            <br />
+            <hr />
+
+            <!-- Button -->
+            <div class="form-group">
+                <label class="col-md-4 control-label"></label>
+                <div class="col-md-4 text-center">
+                    <button type="submit" class="btn btn-lg btn-warning">Submit</button>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="{% static 'js/jquery-3.3.1.slim.min.js' %}" crossorigin="anonymous"></script>
+<script src="{% static 'js/popper.min.js' %}" crossorigin="anonymous"></script>
+<script src="{% static 'js/bootstrap.min.js' %}" crossorigin="anonymous"></script>
+
+
+</body>
+</html>

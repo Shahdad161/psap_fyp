@@ -1,0 +1,170 @@
+<!-- ongoing_admissions.html -->
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Title</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+  </head>
+  <style>
+    * {
+      color: #961e64;
+    }
+    .main {
+      background-image: url({% static 'img/bg_students.bbae6663.jpg' %});
+    }
+    .inner-main {
+      background-color: white;
+    }
+  </style>
+  <body>
+    <div class="main p-lg-5">
+      <div class="container inner-main p-4">
+      <h2 class="text-center">{{ uniName }}'s Dashboard</h2>
+      <h5 class="text-right">{{ uniName }}<h5> 
+        <div class="row p-lg-3">
+          
+          <a onclick="alert('You will be logged out.')" href="/university_login/" class="col-6 btn btn-danger">Back to Main Page</a>
+          <div class="col-6 d-flex justify-content-end">
+            <a href="{% url 'uniUpdateForm' %}">
+              <button class="btn mr-3 btn-primary">Edit account</button>
+            </a>
+            <a onclick="alert('You will be logged out.')"  href="/university_login/"><button class="btn btn-danger">log out</button>
+            </a>
+          </div>
+        </div>
+        <hr />
+        {% comment %} <div class="row p-lg-3"> {% endcomment %}
+          {% comment %} <h1>On going Admissions</h1> {% endcomment %}
+          {% comment %} <div class="col-lg-6 pb-2 d-flex justify-content-end"> {% endcomment %}
+            {% comment %} <button class="btn btn-danger"> {% endcomment %}
+              {% comment %} <a href="{% url 'uniNewAdmissions' %}">New Admissions</a> {% endcomment %}
+            {% comment %} </button> {% endcomment %}
+          {% comment %} </div> {% endcomment %}
+          {% comment %} <div class="row table"> {% endcomment %}
+            {% comment %} <table class="table table-hover table-striped"> {% endcomment %}
+              {% comment %} <thead> {% endcomment %}
+                {% comment %} <tr> {% endcomment %}
+                  {% comment %} <th>Session</th> {% endcomment %}
+                  {% comment %} <th>Program</th> {% endcomment %}
+                  {% comment %} <th>Start Date</th> {% endcomment %}
+                  {% comment %} <th>End Date</th> {% endcomment %}
+                {% comment %} </tr> {% endcomment %}
+              {% comment %} </thead> {% endcomment %}
+              {% comment %} <tbody> {% endcomment %}
+                {% comment %} <tr> {% endcomment %}
+                  {% comment %} <td>Fall</td> {% endcomment %}
+                  {% comment %} <td>BS</td> {% endcomment %}
+                  {% comment %} <td>09/07/2023</td> {% endcomment %}
+                  {% comment %} <td>12/08/2023</td> {% endcomment %}
+                {% comment %} </tr> {% endcomment %}
+              {% comment %} </tbody> {% endcomment %}
+            {% comment %} </table> {% endcomment %}
+          {% comment %} </div> {% endcomment %}
+        {% comment %} </div> {% endcomment %}
+        <div class="row p-lg-3">
+          <h1>On going Admissions</h1>
+          <div class="col-lg-6 pb-2 d-flex justify-content-end">
+              <button class="btn btn-danger">
+                  <a href="{% url 'uniNewAdmissions' %}">New Admissions</a>
+              </button>
+          </div>
+          <div class="row table">
+              <table class="table table-hover table-striped">
+                  <thead>
+                      <tr>
+                          <th>Session</th>
+                          <th>Program</th>
+                          <th>Start Date</th>
+                          <th>End Date</th>
+
+                      </tr>
+                  </thead>
+                  <tbody>
+                    {% for admission in admissions %}
+                    <tr>
+                        <td>{{ admission.session }}</td>
+                        <td>{{ admission.program }}</td>
+                        <td>{{ admission.start_date }}</td>
+                        <td>{{ admission.end_date }}</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+              </table>
+          </div>
+      </div>
+        <div class="row">
+          <div class="col-lg-6">
+            <h1>Recieved Merit Lists</h1>
+          </div>
+        </div>
+        <div class="row table">
+          <table class="table table-hover table-striped">
+            <thead>
+              <tr>
+                <th>Program</th>
+                <th>Status</th>
+                <th>Validation Deadline</th>
+                <th>Delete</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Computer Scincec</td>
+                <td>Submitted</td>
+                <td>12/08/2023</td>
+                <td><button class="btn btn-danger">Delete</button></td>
+              </tr>
+              <tr>
+                <td>Computer Scincec</td>
+                <td>Submitted</td>
+                <td>12/08/2023</td>
+                <td><button class="btn btn-danger">Delete</button></td>
+              </tr>
+              <tr>
+                <td>Computer Scincec</td>
+                <td>Submitted</td>
+                <td>12/08/2023</td>
+                <td><button class="btn btn-danger">Delete</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"
+    ></script>
+    
+  </body>
+</html>
