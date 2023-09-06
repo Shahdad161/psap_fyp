@@ -1,0 +1,277 @@
+    {% load static %} <!-- Load the static template tag -->
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <title>Announce Admissions</title>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
+
+        <!-- jQuery library -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+        <!-- Latest compiled JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        <!-- Required meta tags -->
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+        <!-- Bootstrap CSS -->
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+            integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+            crossorigin="anonymous"
+        />
+    </head>
+    <style>
+        .main {
+            background-image: url({% static 'img/bg_students.bbae6663.jpg' %});
+        }
+        * {
+            font-size: large;
+            color: #961e64;
+        }
+        .form-control {
+            height: auto !important;
+        }
+        .input-group-addon,
+        .input-group-btn {
+            width: auto !important;
+        }
+    </style>
+
+    <body class="main p-4">
+    <div class="container">
+        <form class="well form-horizontal" action="{% url 'announce_admissions' %}" method="post" id="contact_form">
+            {% csrf_token %} <!-- Add CSRF token for form security -->
+            <fieldset>
+                <!-- Form Name -->
+                <legend>
+                    <a href="{% url 'uniHome' %}" class="btn btn-lg btn-danger">Back</a> 
+                         <h3 class="text-right">{{ uniName }}<h3> 
+
+                    <div>
+                        <h1 class="text-center">
+                            <b>Announce new Admission</b>
+                        </h1>
+                    </div>
+                </legend>
+                <hr>
+                {% comment %} select campus {% endcomment %}
+                <div class="form-group">
+                    <label class="col-md-4 control-label">Campus name</label>
+                    <div class="col-md-4 selectContainer">
+                        <div class="input-group">
+                            <span class="input-group-addon"
+                                ><i class="glyphicon glyphicon-list"></i
+                            ></span>
+                           <input type="text" class="form-control" name="campus">
+                        </div>
+                    </div>
+                </div>
+                <!-- Select session -->
+
+                <div class="form-group">
+                    <label class="col-md-4 control-label">Session</label>
+                    <div class="col-md-4 selectContainer">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
+                            <select name="session" class="form-control selectpicker">
+                                <option value="">Select</option>
+                                <option>Fall</option>
+                                <option>Spring</option>
+                                <option>Winter</option>
+                                <option>Fall</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!--Program-->
+                <div class="form-group">
+                    <label class="col-md-4 control-label">Choose Program</label>
+                    <div class="col-md-4 selectContainer">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
+                            <select name="program" class="form-control selectpicker">
+                                <option value="">Select</option>
+                                <option>Bachelors/BS</option>
+                                <option>MS/M.phil</option>
+                                <option>Phd</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Admission test -->
+                <div class="form-group">
+                    <label class="col-md-4 control-label">Required Admission test</label>
+                    <div class="col-md-4 selectContainer">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
+                            <select name="admission_test" class="form-control selectpicker">
+                                <option value="">Select</option>
+                                <option>Not required</option>
+                                <option>NTS NAT</option>
+                                <option>ECAT</option>
+                                <option>MCAT</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            
+                <!-- Number of students to be shortlisted-->
+
+                <div class="form-group">
+                    <label class="col-md-4 control-label">Number of students to be shortlisted</label>
+                    <div class="col-md-4 inputGroupContainer">
+                    <div class="input-group">
+                        <span class="input-group-addon"
+                        ><i class="glyphicon glyphicon-asterisk"></i
+                        ></span>
+                        <input
+                        name="no_of_shortlisted_students"
+                        placeholder="50"
+                        class="form-control"
+                        type="Number"
+                        />
+                    </div>
+                    </div>
+                </div>
+                
+                <!-- Number of students to be shortlisted-->
+                <div class="form-group">
+                    <label class="col-md-4 control-label">merit calculation</label>
+                    <div class="col-md-4 inputGroupContainer">
+                        <label>Intermedaite required Percentage</label>
+
+                        <div class="input-group">
+                            <span class="input-group-addon"
+                            ><i class="glyphicon glyphicon-asterisk"></i
+                            ></span>
+                            <input
+                            name="intermedaite_required_percentage"
+                            placeholder="50"
+                            class="form-control"
+                            type="Number"
+                            />
+                    </div>
+                    </div>
+                </div>
+                <!-- Number of students to be shortlisted-->
+                <div class="form-group">
+                    <label class="col-md-4 control-label">merit calculation</label>
+                    <div class="col-md-4 inputGroupContainer">
+                        <label> Bachelor required Percentage </label>
+
+                        <div class="input-group">
+                            <span class="input-group-addon"
+                            ><i class="glyphicon glyphicon-asterisk"></i
+                            ></span>
+                            <input
+                            name="bachelor_required_percentage"
+                            placeholder="50"
+                            class="form-control"
+                            type="Number"
+                            />
+                        </div>
+                    </div>
+                </div>
+                <!-- Number of students to be shortlisted-->
+                <div class="form-group">
+                    <label class="col-md-4 control-label">merit calculation</label>
+                    <div class="col-md-4 inputGroupContainer">
+                        <label>Test required percentage Percentage</label>
+
+                        <div class="input-group">
+                            <span class="input-group-addon">   <i class="glyphicon glyphicon-asterisk"></i
+                            ></span>
+                                <input
+                                name="Test_required_percentage_percentage"
+                                placeholder="50"
+                                class="form-control"
+                                type="Number"
+                                />
+                        </div>
+                    </div>
+                </div>
+                <!-- Number of students to be shortlisted-->
+                <div class="form-group">
+                    <label class="col-md-4 control-label">Start Date</label>
+                    <div class="col-md-4 inputGroupContainer">
+                        <div class="input-group">
+                            <span class="input-group-addon"
+                            ><i class="glyphicon glyphicon-asterisk"></i
+                            ></span>
+                            <input
+                            name="start_date"
+                            placeholder="50"
+                            class="form-control"
+                            type="date"
+                            />
+                        </div>
+                    </div>
+                </div>
+                <!-- Number of students to be shortlisted-->
+                <div class="form-group">
+                    <label class="col-md-4 control-label">End Date</label>
+                    <div class="col-md-4 inputGroupContainer">
+                        <div class="input-group">
+                            <span class="input-group-addon"
+                            ><i class="glyphicon glyphicon-asterisk"></i
+                            ></span>
+                            <input
+                            name="end_date"
+                            placeholder="50"
+                            class="form-control"
+                            type="date"
+                            />
+                        </div>
+                    </div>
+                </div>
+                
+                                
+                <!-- Department-->
+
+                <div class="form-group">
+                    <label class="col-md-4 control-label">Departments</label>
+                    <div class="col-md-8 inputGroupContainer">
+                        <div class="checkboxes">
+                            <label class="checkbox-inline">
+                                <input type="checkbox" name="department" value="Computer Science" /> Computer Science
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" name="department" value="Mathematics" /> Mathematics
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" name="department" value="BBA" /> BBA
+                            </label>
+                            <!-- Add more department options as needed -->
+                        </div>
+                    </div>
+                </div>
+
+                
+                <hr />
+                
+                <!-- Button -->
+                <div class="form-group">
+                    <label class="col-md-4 control-label"></label>
+                    <div class="col-md-4 text-center">
+                        <button type="submit" class="btn btn-lg btn-warning">Announce Admissions</button>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+
+    <!-- /.container -->
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    </body>
+    </html>
