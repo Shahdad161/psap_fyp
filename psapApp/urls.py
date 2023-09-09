@@ -31,6 +31,11 @@ urlpatterns = [
     path('announce_admissions/', views.announce_admissions,
          name='announce_admissions'),
     path('stdApplyAdmission/', views.apply_admission, name='stdApplyAdmission'),
+    path('delete-merit/<int:merit_id>/', views.delete_merit_data, name='delete_merit_data'),
+    
+    
+    
+
     #     path('apply_admissionSaveIntoTable/', views.apply_admissionSaveIntoTable,
     #     name='apply_admissionSaveIntoTable'),
 

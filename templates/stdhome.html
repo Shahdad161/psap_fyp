@@ -63,38 +63,37 @@
                     </button>
                 </div>
             </div>
-            <div class="row table">
-                <table class="table table-hover table-striped">
-                    <thead>
-                        <tr>
-                            <th>Program</th>
-                            <th>Status</th>
-                            <th>Validation Deadline</th>
-                            <th>Delete</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Computer Science</td>
-                            <td>Submitted</td>
-                            <td>12/08/2023</td>
-                            <td><button class="btn btn-danger">Delete</button></td>
-                        </tr>
-                        <tr>
-                            <td>Computer Science</td>
-                            <td>Submitted</td>
-                            <td>12/08/2023</td>
-                            <td><button class="btn btn-danger">Delete</button></td>
-                        </tr>
-                        <tr>
-                            <td>Computer Science</td>
-                            <td>Submitted</td>
-                            <td>12/08/2023</td>
-                            <td><button class="btn btn-danger">Delete</button></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+<!-- ... (previous HTML code) ... -->
+
+<div class="row table">
+    <table class="table table-hover table-striped">
+        <thead>
+            <tr>
+                <th>University</th>
+                <th>Campus</th>
+                <th>Department</th>
+                <th>Merit</th>
+                <th>Status</th>
+                <th>Withdraw</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for data in merit_data %}
+            <tr>
+                <td>{{ data.selected_university }}</td>
+                <td>{{ data.campus }}</td>
+                <td>{{ data.department }}</td>
+                <td>{{ data.merit_percentage }}</td>
+                <td>submitted</td>
+                <td><a href="{% url 'delete_merit_data' data.id %}" class="btn btn-danger">Delete</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- ... (remaining HTML code) ... -->
+
         </div>
     </div>
     <!-- Optional JavaScript -->

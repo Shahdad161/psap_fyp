@@ -46,7 +46,7 @@ def loginasUni(request):
 
 def loginasStd(request):
     # Add your view logic here
-    return render(request, 'loginasStd.html')
+    return render(request, 'loginasStd.html',{})
 
 
 def registerasUniPage(request):
@@ -58,70 +58,23 @@ def registerasStd(request):
     # Add your view logic here
     return render(request, 'registerasStd.html')
 
+from django.shortcuts import render
+from .models import StudentMeritData  # Import your StudentMeritData model
+
+ # Import the StudentInfo model
 
 def stdHome(request):
-    # Add your view logic here
     if request.session.get('authenticated') == True:
         email = request.session.get('email')
-        cursor = conn.cursor()
-        cursor.execute(
-            "SELECT first_name FROM psapapp_stdinfotable WHERE email=%s", [email])
-        stdName = cursor.fetchone()[0]
-        return render(request, 'stdHome.html', {'stdName': stdName})
 
-# working without merit
-# def stdApplied(request):
-#     if request.session.get('authenticated') == True:
-#         email = request.session.get('email')
-#         cursor = conn.cursor()
-#         cursor.execute(
-#             "SELECT first_name, id FROM psapapp_stdinfotable WHERE email=%s", [email])
-#         row = cursor.fetchone()
-#         if row:
-#             stdName = row[0]
-#             std_id = row[1]
+        # Fetch the student's first name
+        student_info = StdInfoTable.objects.get(email=email)
+        stdName = student_info.first_name
 
-#         if request.method == 'POST':
-#             # Get the form data from the POST request
-#             university_name = request.POST.get('university')
-#             campus = request.POST.get('campus')
-#             program = request.POST.get('program')
-#             department = request.POST.get('department')
-#             required_test = request.POST.get('required_test')
-#             test_obtained_marks = request.POST.get('test_obtained_marks')
-#             test_total_marks = request.POST.get('test_total_marks')
-#             fees_slip = request.FILES.get('fees_slip')
+        # Fetch data from the StudentMeritData model based on the relationship
+        merit_data = StudentMeritData.objects.filter(student_info=student_info)
 
-#             try:
-#                 # Save the form data into the table
-#                 admission_form = AppliedForAdmissionForm.objects.create(
-#                     university=university_name,  # Corrected field name
-#                     campus=campus,
-#                     program=program,
-#                     department=department,
-#                     required_test=required_test,
-#                     test_obtained_marks=test_obtained_marks,
-#                     test_total_marks=test_total_marks,
-#                     fees_slip=fees_slip,
-#                     std_email=email,
-#                     student_info_id=std_id,
-#                 )
-#                 admission_form.save()
-
-#                 # Render the same page with a success message
-#                 return render(request, 'stdNewApplication.html', {'success_message': 'Your application was Submitted'})
-
-#             except Exception as e:
-#                 # Log the exception for debugging
-#                 print(e)
-#                 # Render the same page with an error message
-#                 return render(request, 'stdNewApplication.html', {'error_message': 'Error saving form data'})
-
-#         # Render the same page with an error message if the request method is not POST
-#         return render(request, 'stdNewApplication.html', {'error_message': 'Invalid request method'})
-
-#     else:
-#         return redirect('university_login/')
+        return render(request, 'stdHome.html', {'stdName': stdName, 'merit_data': merit_data})
 
 
 def stdApplied(request):
@@ -144,8 +97,8 @@ def stdApplied(request):
                 fees_slip = request.FILES.get('fees_slip')
 
                 # Fetch the admission conditions for the selected university
-                admission_conditions = Admission.objects.get(
-                    university_name=university_name)
+                admission_conditions = Admission.objects.filter(
+                university_name=university_name).first()
 
                 # Calculate the student's merit based on the formula defined in Admission model
                 # Replace this with your actual merit calculation formula
@@ -203,10 +156,10 @@ def stdApplied(request):
             return render(request, 'stdNewApplication.html', {'error_message': 'Invalid request method'})
 
         except StdInfoTable.DoesNotExist:
-            return render(request, 'error.html', {'error_message': 'Student information not found.'})
+            return render(request, 'stdNewApplication.html', {'error_message': 'Student information not found.'})
 
         except Admission.DoesNotExist:
-            return render(request, 'error.html', {'error_message': 'University not found in admission conditions.'})
+            return render(request, 'stdNewApplication.html', {'error_message': 'University not found in admission conditions.'})
 
     else:
         return redirect('university_login/')
@@ -514,13 +467,15 @@ def student_login(request):
             request.session['authenticated'] = True
             request.session['email'] = email
 
-            # cursor.execute(
-            #     "SELECT email from psapapp_stdinfotable WHERE email=%s", [email])
-            # email = cursor.fetchone()[0]
             cursor.execute(
                 "SELECT first_name from psapapp_stdinfotable WHERE email=%s", [email])
             stdName = cursor.fetchone()[0]
-            return render(request, 'stdHome.html', {'stdName': stdName})
+            student_info = StdInfoTable.objects.get(email=email)
+            stdName = student_info.first_name
+
+        # Fetch data from the StudentMeritData model based on the relationship
+            merit_data = StudentMeritData.objects.filter(student_info=student_info)
+            return render(request, 'stdHome.html', {'stdName': stdName,'merit_data': merit_data})
         else:
             messages.error(request, 'Invalid Email or Password')
             return render(request, 'loginasStd.html')
@@ -629,3 +584,24 @@ def apply_admission(request):
 
 
 # Merit calculation
+
+from django.http import HttpResponseNotFound
+
+def delete_merit_data(request, merit_id):
+    try:
+        merit_data = StudentMeritData.objects.get(pk=merit_id)
+
+        # Check if the logged-in user is the owner of the record
+        if merit_data.student_info.email == request.session.get('email'):
+            merit_data.delete()
+            return redirect('stdHome')  # Redirect to the student's home page after deletion
+        else:
+            return HttpResponseNotFound("Record not found.")
+    except StudentMeritData.DoesNotExist:
+        return HttpResponseNotFound("Record not found.")
+
+
+
+
+
+
