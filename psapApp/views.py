@@ -359,26 +359,39 @@ def announce_admissions(request):
     return render(request, 'uniHome.html', {'uniName': uniName})
 
 
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import Admission, StudentMeritData  # Import your models
+
 def university_login(request):
     if request.method == 'POST':
-        cursor = conn.cursor()
         email = request.POST['email']
         password = request.POST['password']
-        c = "SELECT * FROM psapapp_uniinfotable WHERE email='{}' AND password='{}'".format(
-            email, password)
-        cursor.execute(c)
-        authenticated = tuple(cursor.fetchall())
+
+        # Perform authentication and retrieve university name
+        # Assuming you have already established a database connection
+        cursor = conn.cursor()
+        c = "SELECT * FROM psapapp_uniinfotable WHERE email=%s AND password=%s"
+        cursor.execute(c, (email, password))
+        authenticated = cursor.fetchone()
+
         if authenticated:
             request.session['authenticated'] = True
             request.session['email'] = email
-            cursor.execute(
-                "SELECT university_name from psapapp_uniinfotable WHERE email=%s", [email])
+
+            cursor.execute("SELECT university_name FROM psapapp_uniinfotable WHERE email=%s", [email])
             uniName = cursor.fetchone()[0]
+
+            # Query admissions and merits data
             admissions = Admission.objects.filter(university_name=uniName)
+            # merits = StudentMeritData.objects.filter(selected_university=uniName)
+
             context = {
                 'admissions': admissions,
                 'uniName': uniName,
+                # 'merits': merits,
             }
+
             return render(request, 'uniHome.html', context)
         else:
             messages.error(request, 'Invalid Email or Password')
@@ -386,6 +399,7 @@ def university_login(request):
     else:
         logout(request)
         return render(request, 'loginasUni.html')
+
 
 
 # Student Work
@@ -599,9 +613,73 @@ def delete_merit_data(request, merit_id):
             return HttpResponseNotFound("Record not found.")
     except StudentMeritData.DoesNotExist:
         return HttpResponseNotFound("Record not found.")
+from io import BytesIO
+from django.http import HttpResponse
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 
+def download_merit_list(request, department):
+    # Query the StudentMeritData model to filter by selected_university and department
+    merit_list = StudentMeritData.objects.filter(department=department)
 
+    # Create a PDF response
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="{department}_merit_list.pdf"'
 
+    # Create a PDF document using ReportLab
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=letter)
 
+    # Define custom styles for the title and subtitle
+    title_style = ParagraphStyle(
+        'TitleStyle',
+        fontSize=18,
+        fontName='Helvetica-Bold',
+        alignment=1,
+        spaceAfter=12
+    )
+    subtitle_style = ParagraphStyle(
+        'SubtitleStyle',
+        fontSize=14,
+        fontName='Helvetica-Bold',
+        alignment=1,
+        spaceAfter=6
+    )
 
+    # Define data for the table
+    table_data = [['Student Name', 'Campus', 'Department', 'Merit Percentage']]
 
+    for entry in merit_list:
+        student_info = entry.student_info  # This gets the related StdInfoTable object
+        table_data.append([student_info.first_name, entry.campus, entry.department, entry.merit_percentage])
+
+    # Create the table
+    table = Table(table_data)
+    table_style = TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+    ])
+    table.setStyle(table_style)
+
+    # Build the PDF document
+    story = []
+    title = Paragraph('Merit List', title_style)
+    subtitle = Paragraph(f'Department: {department}', subtitle_style)
+    spacer = Spacer(1, 12)
+    story.extend([title, subtitle, spacer, table])
+
+    doc.build(story)
+
+    # Move the buffer's cursor to the beginning
+    buffer.seek(0)
+    response.write(buffer.read())
+    buffer.close()
+
+    return response

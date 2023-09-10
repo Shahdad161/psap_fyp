@@ -33,7 +33,7 @@ urlpatterns = [
     path('stdApplyAdmission/', views.apply_admission, name='stdApplyAdmission'),
     path('delete-merit/<int:merit_id>/', views.delete_merit_data, name='delete_merit_data'),
     
-    
+    path('download_merit_list/<str:department>/', views.download_merit_list, name='download_merit_list'),
     
 
     #     path('apply_admissionSaveIntoTable/', views.apply_admissionSaveIntoTable,
