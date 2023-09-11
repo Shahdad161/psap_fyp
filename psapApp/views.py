@@ -60,7 +60,6 @@ def registerasStd(request):
 
 from django.shortcuts import render
 from .models import StudentMeritData  # Import your StudentMeritData model
-
  # Import the StudentInfo model
 
 def stdHome(request):
@@ -613,16 +612,20 @@ def delete_merit_data(request, merit_id):
             return HttpResponseNotFound("Record not found.")
     except StudentMeritData.DoesNotExist:
         return HttpResponseNotFound("Record not found.")
+
+# DOWNLOAD MERIT LIST
+
 from io import BytesIO
 from django.http import HttpResponse
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from django.db.models import F
 
 def download_merit_list(request, department):
     # Query the StudentMeritData model to filter by selected_university and department
-    merit_list = StudentMeritData.objects.filter(department=department)
+    merit_list = StudentMeritData.objects.filter(department=department).order_by(F('merit_percentage').desc())
 
     # Create a PDF response
     response = HttpResponse(content_type='application/pdf')
@@ -649,11 +652,12 @@ def download_merit_list(request, department):
     )
 
     # Define data for the table
-    table_data = [['Student Name', 'Campus', 'Department', 'Merit Percentage']]
+    table_data = [['CNIC', 'Student Name', 'Intermediate Marks', 'Matric Marks', 'Merit Percentage']]
 
     for entry in merit_list:
         student_info = entry.student_info  # This gets the related StdInfoTable object
-        table_data.append([student_info.first_name, entry.campus, entry.department, entry.merit_percentage])
+        table_data.append([student_info.cnic, student_info.first_name + " " + student_info.last_name,
+                           student_info.inter_obtained_marks, student_info.matric_obtained_marks, entry.merit_percentage])
 
     # Create the table
     table = Table(table_data)
