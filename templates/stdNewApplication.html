@@ -74,12 +74,13 @@
                         <select name="university" class="form-control selectpicker" id="university-select">
                             <option value="">-- Select University --</option>
                             {% for admission in admissions %}
-                            <option value="{{ admission.university_name }}">{{ admission.university_name }}</option>
+                                <option value="{{ admission.university_name }}" {% if admission.university_name == selected_university %}selected{% endif %}>{{ admission.university_name }}</option>
                             {% endfor %}
                         </select>
                     </div>
                 </div>
             </div>
+
             <!--Campus-->
             <div class="form-group">
                 <label class="col-md-4 control-label">Select Campus</label>
@@ -107,7 +108,7 @@
                             ><i class="glyphicon glyphicon-list"></i
                         ></span>
                         <select name="program" class="form-control selectpicker">
-                            <option value="">-- Select Department --</option>
+                            <option value="">-- Select Program --</option>
 
                             {% for admission in admissions %}
                             <option value="{{ admission.program }}">{{ admission.program }}</option>
@@ -166,6 +167,7 @@
                             placeholder="1-100"
                             class="form-control"
                             type="number"
+                            
                         />
                     </div>
                 </div>
@@ -183,6 +185,8 @@
                             placeholder="0-100"
                             class="form-control"
                             type="number"
+                            
+                            
                         />
                     </div>
                 </div>
@@ -220,6 +224,20 @@
         </fieldset>
     </form>
 </div>
+<script>
+    $(document).ready(function () {
+        // Listen for change event on the university select
+        $("#university-select").change(function () {
+            // Get the selected university value
+            var selectedUniversity = $(this).val();
+
+            // Reload the page with a query parameter for the selected university
+            window.location.href = window.location.pathname + "?university=" + selectedUniversity;
+        });
+    });
+</script>
+
+<!-- Rest of your HTML template remains unchanged -->
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->

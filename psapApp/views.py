@@ -163,18 +163,25 @@ def stdApplied(request):
     else:
         return redirect('university_login/')
 
-
 def stdNewApplication(request):
-    # Add your view logic here
     email = request.session.get('email')
     cursor = conn.cursor()
     cursor.execute(
         "SELECT first_name FROM psapapp_stdinfotable WHERE email=%s", [email])
     stdName = cursor.fetchone()[0]
+
+    # Get the selected university from the query parameter
+    selected_university = request.GET.get("university")
+
+    # Fetch all admissions data initially
     admissions = Admission.objects.all()
+
+    # Filter admissions based on the selected university, if available
+    if selected_university:
+        admissions = admissions.filter(university_name=selected_university)
+
     admission_data = []
     for admission in admissions:
-
         data = {
             'university_name': admission.university_name,
             'department': admission.departments,
@@ -183,11 +190,13 @@ def stdNewApplication(request):
             'program': admission.program,
         }
         admission_data.append(data)
+
     context = {
-        'admissions': admissions,
+        'admissions': admission_data,
         'stdName': stdName,
+        'selected_university': selected_university,
     }
-    return render(request, 'stdNewApplication.html', {'admissions': admission_data, 'stdName': stdName})
+    return render(request, 'stdNewApplication.html', context)
 
 
 def uniHome(request):
@@ -615,17 +624,27 @@ def delete_merit_data(request, merit_id):
 
 # DOWNLOAD MERIT LIST
 
+
+
 from io import BytesIO
 from django.http import HttpResponse
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from django.db.models import F
+from django.shortcuts import get_object_or_404
+from .models import StudentMeritData, Admission
+from django.http import Http404
 
 def download_merit_list(request, department):
-    # Query the StudentMeritData model to filter by selected_university and department
-    merit_list = StudentMeritData.objects.filter(department=department).order_by(F('merit_percentage').desc())
+    # Get the Admission object for the specified department
+    admission = get_object_or_404(Admission, departments=department)
+
+    # Query the StudentMeritData model to filter by department and limit to the specified number of students
+    merit_list = StudentMeritData.objects.filter(department=department)[:admission.no_of_shortlisted_students]
+
+    if not merit_list:
+        raise Http404("No students found in the merit list for this department.")
 
     # Create a PDF response
     response = HttpResponse(content_type='application/pdf')
