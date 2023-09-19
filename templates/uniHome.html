@@ -85,6 +85,8 @@
                           <th>Program</th>
                           <th>Start Date</th>
                           <th>End Date</th>
+                          <th>Close Admission</th>
+
 
                       </tr>
                   </thead>
@@ -96,6 +98,9 @@
                         <td>{{ admission.program }}</td>
                         <td>{{ admission.start_date }}</td>
                         <td>{{ admission.end_date }}</td>
+                        <td>
+                          <button type="submit" class="btn btn-danger">Close Admissions</button>
+                        </td>
                     </tr>
                     {% endfor %}
                   </tbody>
@@ -117,7 +122,8 @@
         <th>Status</th>
         <th>Students Required</th> <!-- New column -->
         <th>Students Applied</th> <!-- New column -->
-        <th>View</th>
+        <th>Merit List</th>
+
       </tr>
     </thead>
     <tbody>
@@ -135,9 +141,10 @@
         <td>{{ admission.no_of_shortlisted_students }}</td> <!-- Display the number of students -->
         <td>{{ admission.students_applied }}</td>        
         <td>
-          <a href="{% url 'download_merit_list' admission.university_name admission.departments%}" class="btn btn-primary">Download Merit List</a>
+          <a href="{% url 'download_merit_list' admission.university_name admission.departments%}" class="btn btn-primary">Download</a>
 
         </td>
+
       </tr>
       {% endfor %}
     </tbody>
