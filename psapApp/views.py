@@ -662,7 +662,7 @@ def download_merit_list(request, university_name, department):
     admission = get_object_or_404(Admission, university_name=university_name, departments=department)
 
     # Query the StudentMeritData model to filter by university, department, and limit to the specified number of students
-    merit_list = StudentMeritData.objects.filter(selected_university=university_name, department=department)[:admission.no_of_shortlisted_students]
+    merit_list = StudentMeritData.objects.filter(selected_university=university_name, department=department).order_by('-merit_percentage')[:admission.no_of_shortlisted_students]
 
     if not merit_list:
         raise Http404("No students found in the merit list for this department.")
