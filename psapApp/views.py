@@ -657,19 +657,19 @@ from django.shortcuts import get_object_or_404
 from .models import StudentMeritData, Admission
 from django.http import Http404
 
-def download_merit_list(request, department):
-    # Get the Admission object for the specified department
-    admission = get_object_or_404(Admission, departments=department)
+def download_merit_list(request, university_name, department):
+    # Get the Admission object for the specified university and department
+    admission = get_object_or_404(Admission, university_name=university_name, departments=department)
 
-    # Query the StudentMeritData model to filter by department and limit to the specified number of students
-    merit_list = StudentMeritData.objects.filter(department=department)[:admission.no_of_shortlisted_students]
+    # Query the StudentMeritData model to filter by university, department, and limit to the specified number of students
+    merit_list = StudentMeritData.objects.filter(selected_university=university_name, department=department)[:admission.no_of_shortlisted_students]
 
     if not merit_list:
         raise Http404("No students found in the merit list for this department.")
 
     # Create a PDF response
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="{department}_merit_list.pdf"'
+    response['Content-Disposition'] = f'attachment; filename="{university_name}_{department}_merit_list.pdf"'
 
     # Create a PDF document using ReportLab
     buffer = BytesIO()
@@ -715,7 +715,7 @@ def download_merit_list(request, department):
     # Build the PDF document
     story = []
     title = Paragraph('Merit List', title_style)
-    subtitle = Paragraph(f'Department: {department}', subtitle_style)
+    subtitle = Paragraph(f'University: {university_name}, Department: {department}', subtitle_style)
     spacer = Spacer(1, 12)
     story.extend([title, subtitle, spacer, table])
 

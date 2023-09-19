@@ -129,7 +129,8 @@
         <td>{{ admission.no_of_shortlisted_students }}</td> <!-- Display the number of students -->
         <td>{{ admission.students_applied }}</td>        
         <td>
-          <a href="{% url 'download_merit_list' admission.departments %}" class="btn btn-primary">Download Merit List</a>
+          <a href="{% url 'download_merit_list' admission.university_name admission.departments%}" class="btn btn-primary">Download Merit List</a>
+
         </td>
       </tr>
       {% endfor %}
