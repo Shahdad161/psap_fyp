@@ -657,15 +657,29 @@ from django.shortcuts import get_object_or_404
 from .models import StudentMeritData, Admission
 from django.http import Http404
 
+
+
 def download_merit_list(request, university_name, department):
     # Get the Admission object for the specified university and department
     admission = get_object_or_404(Admission, university_name=university_name, departments=department)
 
-    # Query the StudentMeritData model to filter by university, department, and limit to the specified number of students
-    merit_list = StudentMeritData.objects.filter(selected_university=university_name, department=department).order_by('-merit_percentage')[:admission.no_of_shortlisted_students]
+    # Query the StudentMeritData model to filter by university and department
+    merit_list = StudentMeritData.objects.filter(selected_university=university_name, department=department).order_by('-merit_percentage')
 
     if not merit_list:
         raise Http404("No students found in the merit list for this department.")
+
+    # Fetch all test marks for the students in the merit list
+    student_emails = [entry.student_info.email for entry in merit_list]
+    test_marks_dict = {}
+    admission_forms = AppliedForAdmissionForm.objects.filter(
+        university=university_name,
+        campus__in=[entry.campus for entry in merit_list],
+        department=department,
+        std_email__in=student_emails,
+    )
+    for form in admission_forms:
+        test_marks_dict[form.std_email] = form.test_obtained_marks
 
     # Create a PDF response
     response = HttpResponse(content_type='application/pdf')
@@ -692,12 +706,14 @@ def download_merit_list(request, university_name, department):
     )
 
     # Define data for the table
-    table_data = [['CNIC', 'Student Name', 'Intermediate Marks', 'Matric Marks', 'Merit Percentage']]
+    table_data = [['CNIC', 'Student Name', 'Intermediate Marks', 'Matric Marks', 'Test Marks', 'Merit Percentage']]
 
     for entry in merit_list:
         student_info = entry.student_info  # This gets the related StdInfoTable object
+        test_marks = test_marks_dict.get(student_info.email, "N/A")
+
         table_data.append([student_info.cnic, student_info.first_name + " " + student_info.last_name,
-                           student_info.inter_obtained_marks, student_info.matric_obtained_marks, entry.merit_percentage])
+                           student_info.inter_obtained_marks, student_info.matric_obtained_marks, test_marks, entry.merit_percentage])
 
     # Create the table
     table = Table(table_data)

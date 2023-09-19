@@ -125,7 +125,13 @@
       <tr>
         <td>{{ admission.program }}</td>
         <td>{{ admission.departments }}</td>
-        <td>Received</td>
+        <td>
+          {% if admission.no_of_required_students == admission.students_applied %}
+            Complete
+          {% else %}
+            Incomplete
+          {% endif %}
+        </td>
         <td>{{ admission.no_of_shortlisted_students }}</td> <!-- Display the number of students -->
         <td>{{ admission.students_applied }}</td>        
         <td>
