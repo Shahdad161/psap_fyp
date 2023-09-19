@@ -76,6 +76,9 @@ def stdHome(request):
         return render(request, 'stdHome.html', {'stdName': stdName, 'merit_data': merit_data})
 
 
+from django.shortcuts import render, redirect
+from .models import Admission, AppliedForAdmissionForm
+
 def stdApplied(request):
     if request.session.get('authenticated') == True:
         email = request.session.get('email')
@@ -95,9 +98,19 @@ def stdApplied(request):
                 test_total_marks = request.POST.get('test_total_marks')
                 fees_slip = request.FILES.get('fees_slip')
 
+                # Check if the student has already applied for the same combination
+                if AppliedForAdmissionForm.objects.filter(
+                    university=university_name,
+                    campus=campus,
+                    program=program,
+                    department=department,
+                    std_email=email,
+                ).exists():
+                    return render(request, 'stdNewApplication.html', {'error_message': 'Already applied for this program.'})
+
                 # Fetch the admission conditions for the selected university
                 admission_conditions = Admission.objects.filter(
-                university_name=university_name).first()
+                    university_name=university_name).first()
 
                 # Calculate the student's merit based on the formula defined in Admission model
                 # Replace this with your actual merit calculation formula
@@ -162,6 +175,7 @@ def stdApplied(request):
 
     else:
         return redirect('university_login/')
+
 
 def stdNewApplication(request):
     email = request.session.get('email')
@@ -371,6 +385,10 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import Admission, StudentMeritData  # Import your models
 
+# ... (previous code)
+
+# ... (previous code)
+
 def university_login(request):
     if request.method == 'POST':
         email = request.POST['email']
@@ -392,12 +410,14 @@ def university_login(request):
 
             # Query admissions and merits data
             admissions = Admission.objects.filter(university_name=uniName)
-            # merits = StudentMeritData.objects.filter(selected_university=uniName)
+
+            # Query and count the number of students applied for each admission
+            for admission in admissions:
+                admission.students_applied = StudentMeritData.objects.filter(selected_university=uniName, department=admission.departments).count()
 
             context = {
                 'admissions': admissions,
                 'uniName': uniName,
-                # 'merits': merits,
             }
 
             return render(request, 'uniHome.html', context)
@@ -407,6 +427,7 @@ def university_login(request):
     else:
         logout(request)
         return render(request, 'loginasUni.html')
+
 
 
 

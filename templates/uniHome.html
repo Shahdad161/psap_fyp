@@ -116,6 +116,7 @@
         <th>Department</th>
         <th>Status</th>
         <th>Students Required</th> <!-- New column -->
+        <th>Students Applied</th> <!-- New column -->
         <th>View</th>
       </tr>
     </thead>
@@ -126,6 +127,7 @@
         <td>{{ admission.departments }}</td>
         <td>Received</td>
         <td>{{ admission.no_of_shortlisted_students }}</td> <!-- Display the number of students -->
+        <td>{{ admission.students_applied }}</td>        
         <td>
           <a href="{% url 'download_merit_list' admission.departments %}" class="btn btn-primary">Download Merit List</a>
         </td>
