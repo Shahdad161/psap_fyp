@@ -35,7 +35,7 @@ urlpatterns = [
     
 #     path('download_merit_list/<str:department>/', views.download_merit_list, name='download_merit_list'),
     path('download_merit_list/<str:university_name>/<str:department>/', views.download_merit_list, name='download_merit_list'),
-
+      path('submit/', views.submit_testimonial, name='submit_testimonial'),
     
 
     #     path('apply_admissionSaveIntoTable/', views.apply_admissionSaveIntoTable,

@@ -9,7 +9,7 @@ from django.http import JsonResponse
 from .models import AppliedForAdmissionForm
 from django.shortcuts import render
 from django.contrib.auth.hashers import make_password
-from .models import StdInfoTable
+from .models import StdInfoTable,UniInfoTable
 from django.db import connection
 from .models import StdInfoTable
 from .models import Admission
@@ -33,7 +33,10 @@ password = ''
 
 
 def index(request):
-    return render(request, 'index.html')
+    universities = UniInfoTable.objects.all()  # Fetch all universities from the database
+    testimonials= Testimonial.objects.all()
+    context = {'universities': universities, 'testimonials':testimonials}
+    return render(request, 'index.html',context)
 
 
 def uniOrStd(request):
@@ -743,3 +746,33 @@ def download_merit_list(request, university_name, department):
     buffer.close()
 
     return response
+
+
+
+# views.py
+from django.shortcuts import render, redirect
+from .models import Testimonial
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import Testimonial  # Import your Testimonial model
+def submit_testimonial(request):
+    if request.method == 'POST':
+        # Retrieve data from the POST request
+        name = request.POST.get('name')
+        designation = request.POST.get('designation')
+        text = request.POST.get('text')
+        
+        # Validate the data (you can add your own validation logic here)
+        if not name or not designation or not text:
+            messages.error(request, 'Please fill in all fields.')
+        else:
+            # Create a new Testimonial object and save it to the database
+            testimonial = Testimonial(name=name, designation=designation, text=text)
+            testimonial.save()
+            
+            # Add a success message
+            message = messages.success(request, 'Thank you for your testimonial!')
+            
+            return redirect('submit_testimonial')  # Redirect to a success page
+    
+    return render(request, 'submit_testimonial.html')

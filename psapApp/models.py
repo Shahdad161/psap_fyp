@@ -131,3 +131,14 @@ class StudentMeritData(models.Model):
 
     def __str__(self):
         return self.student_info.student_name
+
+
+from django.db import models
+
+class Testimonial(models.Model):
+    name = models.CharField(max_length=100)
+    designation = models.CharField(max_length=100)
+    text = models.TextField()
+
+    def __str__(self):
+        return self.name
