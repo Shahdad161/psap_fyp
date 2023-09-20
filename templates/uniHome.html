@@ -1,177 +1,159 @@
-<!-- ongoing_admissions.html -->
-
 {% load static %}
 
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>{{ uniName }}</title>
-    <!-- Required meta tags -->
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-
-    <!-- Bootstrap CSS -->
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-      crossorigin="anonymous"
-    />
-  </head>
+<head>
+  <title>{{ uniName }} Dashboard</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
   <style>
-    * {
+    body {
       color: #961e64;
     }
     .main {
-      background-image: url({% static 'img/bg_students.bbae6663.jpg' %});
+      background-image: url("{% static 'img/bg_students.bbae6663.jpg' %}");
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
     }
     .inner-main {
       background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+    .btn-back {
+      background-color: #dc3545;
+      border: none;
+    }
+    .btn-back:hover {
+      background-color: #c82333;
+    }
+    .btn-primary, .btn-danger {
+      color: white;
+    }
+    .table {
+      margin-top: 20px;
+    }
+    .table th {
+      background-color: #961e64;
+      color: white;
+    }
+    .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+      background-color: #f8f9fa;
+    }
+    .navbgcolor{
+      background:#961E64 !important;
+     
     }
   </style>
-  <body>
-     {% comment %} <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="#">University Dashboard</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'uniUpdateForm' %}">Edit Account</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/university_login/" onclick="confirmLogout()">Log Out</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav> {% endcomment %}
-    <div class="main p-lg-5">
-      <div class="container inner-main p-4">
-      <h2 class="text-center">{{ uniName }}'s Dashboard</h2>
-      <h5 class="text-right">{{ uniName }}<h5> 
-        <div class="row p-lg-3">
-          
-          <a onclick="alert('You will be logged out.')" href="/university_login/" class="col-6 btn btn-danger">Back to Main Page</a>
-          <div class="col-6 d-flex justify-content-end">
-            <a href="{% url 'uniUpdateForm' %}">
-              <button class="btn mr-3 btn-primary">Edit account</button>
-            </a>
-            <a onclick="alert('You will be logged out.')"  href="/university_login/"><button class="btn btn-danger">log out</button>
-            </a>
-          </div>
-        </div>
-        <hr />
-
-        <div class="row p-lg-3">
-          <h1>On going Admissions</h1>
-          <div class="col-lg-6 pb-2 d-flex justify-content-end">
-              <button class="btn btn-danger">
-                  <a href="{% url 'uniNewAdmissions' %}">New Admissions</a>
-              </button>
-          </div>
-          <div class="row table">
-              <table class="table table-hover table-striped">
-                  <thead>
-                      <tr>
-                          <th>Campus</th>
-                          <th>Session</th>
-                          <th>Program</th>
-                          <th>Start Date</th>
-                          <th>End Date</th>
-                          <th>Close Admission</th>
-
-
-                      </tr>
-                  </thead>
-                  <tbody>
-                    {% for admission in admissions %}
-                    <tr>
-                        <td>{{ admission.campus }}</td>
-                        <td>{{ admission.session }}</td>
-                        <td>{{ admission.program }}</td>
-                        <td>{{ admission.start_date }}</td>
-                        <td>{{ admission.end_date }}</td>
-                        <td>
-                          <button type="submit" class="btn btn-danger">Close Admissions</button>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                  </tbody>
-              </table>
-          </div>
-      </div>
-        <div class="row">
-          <div class="col-lg-6">
-            <h1>Recieved Merit Lists</h1>
-          </div>
-        </div>
-
-        <div class="row table">
-  <table class="table table-hover table-striped">
-    <thead>
-      <tr>
-        <th>Program</th>
-        <th>Department</th>
-        <th>Status</th>
-        <th>Students Required</th> <!-- New column -->
-        <th>Students Applied</th> <!-- New column -->
-        <th>Merit List</th>
-
-      </tr>
-    </thead>
-    <tbody>
-      {% for admission in admissions %}
-      <tr>
-        <td>{{ admission.program }}</td>
-        <td>{{ admission.departments }}</td>
-        <td>
-          {% if admission.no_of_required_students == admission.students_applied %}
-            Complete
-          {% else %}
-            Incomplete
-          {% endif %}
-        </td>
-        <td>{{ admission.no_of_shortlisted_students }}</td> <!-- Display the number of students -->
-        <td>{{ admission.students_applied }}</td>        
-        <td>
-          <a href="{% url 'download_merit_list' admission.university_name admission.departments%}" class="btn btn-primary">Download</a>
-
-        </td>
-
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
-
-
+</head>
+<body>
+    <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbgcolor ">
+    <div class="container text-white">
+      <a class="navbar-brand" href="#">Dashboard</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'uniUpdateForm' %}">Edit Account</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/university_login/" onclick="alert('You will be logged out.')">Log Out</a>
+          </li>
+        </ul>
       </div>
     </div>
-
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script
-      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-      crossorigin="anonymous"
-    ></script>
-    
-  </body>
+  </nav>
+  <div class="main p-5">
+    <div class="container inner-main">
+      <h2 class="text-center">{{ uniName }} Dashboard</h2>
+      <div class="row mt-4">
+        <div class="col-6">
+          <h1>On-going Admissions</h1>
+        </div>
+        <div class="col-6 text-right">
+          <a href="{% url 'uniNewAdmissions' %}" class="btn btn-danger">New Admissions</a>
+        </div>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-hover table-striped">
+          <thead>
+            <tr>
+              <th>Campus</th>
+              <th>Session</th>
+              <th>Program</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for admission in admissions %}
+            <tr>
+              <td>{{ admission.campus }}</td>
+              <td>{{ admission.session }}</td>
+              <td>{{ admission.program }}</td>
+              <td>{{ admission.start_date }}</td>
+              <td>{{ admission.end_date }}</td>
+              <td>
+                <button type="submit" class="btn btn-danger">Close Admissions</button>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <hr />
+      <div class="row mt-4">
+        <div class="col-6">
+          <h1>Received Merit Lists</h1>
+        </div>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-hover table-striped">
+          <thead>
+            <tr>
+              <th>Program</th>
+              <th>Department</th>
+              <th>Status</th>
+              <th>Students Required</th>
+              <th>Students Applied</th>
+              <th>Merit List</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for admission in admissions %}
+            <tr>
+              <td>{{ admission.program }}</td>
+              <td>{{ admission.departments }}</td>
+              <td>
+                {% if admission.no_of_required_students == admission.students_applied %}
+                  Complete
+                {% else %}
+                  Incomplete
+                {% endif %}
+              </td>
+              <td>{{ admission.no_of_shortlisted_students }}</td>
+              <td>{{ admission.students_applied }}</td>
+              <td>
+                <a href="{% url 'download_merit_list' admission.university_name admission.departments %}" class="btn btn-primary">Download</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
 </html>
