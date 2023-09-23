@@ -53,6 +53,7 @@
         method="post"
         id="contact_form"
         enctype="multipart/form-data"
+        onsubmit="return validateForm()"
       >
         {% csrf_token %} <!-- Add CSRF token to protect against Cross-Site Request Forgery attacks -->
         <fieldset>
@@ -197,6 +198,23 @@
                 ></span>
                 <input
                   name="password"
+                  placeholder="Password"
+                  class="form-control"
+                  type="password"
+                />
+              </div>
+            </div>
+          </div>
+
+                    <div class="form-group">
+            <label class="col-md-4 control-label">Confirm Password</label>
+            <div class="col-md-4 inputGroupContainer">
+              <div class="input-group">
+                <span class="input-group-addon"
+                  ><i class="glyphicon glyphicon-envelope"></i
+                ></span>
+                <input
+                  name="confirmPassword"
                   placeholder="Password"
                   class="form-control"
                   type="password"
@@ -627,5 +645,161 @@
       integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
       crossorigin="anonymous"
     ></script>
+
+    <!-- ... Your existing HTML code ... -->
+
+<!-- JavaScript for Form Validation -->
+<script>
+  // Function to validate the form
+  function validateForm() {
+    // Get form elements
+    var firstName = document.forms["contact_form"]["first_name"].value;
+    var lastName = document.forms["contact_form"]["last_name"].value;
+    var dob = document.forms["contact_form"]["dob"].value;
+    var cnic = document.forms["contact_form"]["cnic"].value;
+    var email = document.forms["contact_form"]["email"].value;
+    var password = document.forms["contact_form"]["password"].value;
+    var confirmPassword = document.forms["contact_form"]["confirmPassword"].value;
+    var phone = document.forms["contact_form"]["phone"].value;
+    var province = document.forms["contact_form"]["province"].value;
+    var city = document.forms["contact_form"]["city"].value;
+    var zipCode = document.forms["contact_form"]["zip_code"].value;
+    var address = document.forms["contact_form"]["address"].value;
+    var intermediate = document.forms["contact_form"]["intermediate"].value;
+    var collegeName = document.forms["contact_form"]["college_name"].value;
+    var collegeGraduationDate = document.forms["contact_form"]["college_graduation_date"].value;
+    var interObtainedMarks = document.forms["contact_form"]["inter_obtained_marks"].value;
+    var interTotalMarks = document.forms["contact_form"]["inter_total_marks"].value;
+    var matriculation = document.forms["contact_form"]["matriculation"].value;
+    var schoolName = document.forms["contact_form"]["school_name"].value;
+    var matricGraduationDate = document.forms["contact_form"]["matric_graduation_date"].value;
+    var matricObtainedMarks = document.forms["contact_form"]["matric_obtained_marks"].value;
+    var matricTotalMarks = document.forms["contact_form"]["matric_total_marks"].value;
+    var selfPhoto = document.forms["contact_form"]["self_photo"].value;
+    var idCardPhoto = document.forms["contact_form"]["id_card_photo"].value;
+    var interTranscript = document.forms["contact_form"]["inter_transcript"].value;
+    var interDegree = document.forms["contact_form"]["inter_degree"].value;
+    var matricTranscript = document.forms["contact_form"]["matric_transcript"].value;
+    var matricDegree = document.forms["contact_form"]["matric_degree"].value;
+
+    // Check if any of the required fields are empty
+    if (
+      firstName == "" ||
+      lastName == "" ||
+      dob == "" ||
+      cnic == "" ||
+      email == "" ||
+      password == "" ||
+      phone == "" ||
+      province == "" ||
+      city == "" ||
+      zipCode == "" ||
+      address == "" ||
+      intermediate == "" ||
+      collegeName == "" ||
+      collegeGraduationDate == "" ||
+      interObtainedMarks == "" ||
+      interTotalMarks == "" ||
+      matriculation == "" ||
+      schoolName == "" ||
+      matricGraduationDate == "" ||
+      matricObtainedMarks == "" ||
+      matricTotalMarks == "" ||
+      selfPhoto == "" ||
+      idCardPhoto == "" ||
+      interTranscript == "" ||
+      interDegree == "" ||
+      matricTranscript == "" ||
+      matricDegree == ""
+    ) {
+      alert("All fields are required. Please fill out all required fields.");
+      return false;
+    }
+        // Check if first name and last name are not empty
+    if (firstName == "" || lastName == "") {
+      alert("First Name and Last Name must be filled out");
+      return false;
+    }
+    // Check if CNIC is a 12-digit number
+    if (cnic.length != 13 || isNaN(cnic)) {
+      alert("CNIC must be a 12-digit number");
+      return false;
+    }
+
+    // Check if email is in a valid format
+    var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    if (!emailPattern.test(email)) {
+      alert("Please enter a valid email address.");
+      return false;
+    }
+    if (password !== confirmPassword) {
+      alert("Passwords do not match");
+      return false;
+    }
+
+    // Check if phone number is a valid format (e.g., 123-456-7890)
+    var phonePattern = /^\d{3}-\d{3}-\d{4}$/;
+    if (!phonePattern.test(phone)) {
+      alert("Please enter a valid phone number (e.g., 123-456-7890).");
+      return false;
+    }
+
+ 
+    // Check if zip code is a valid format (e.g., 12345 or 12345-6789)
+    var zipCodePattern = /^\d{5}(-\d{4})?$/;
+    if (!zipCodePattern.test(zipCode)) {
+      alert("Please enter a valid zip code (e.g., 12345 or 12345-6789).");
+      return false;
+    }
+
+    // Check if date of birth (DOB) is in a valid format (e.g., YYYY-MM-DD)
+    var dobPattern = /^\d{4}-\d{2}-\d{2}$/;
+    if (!dobPattern.test(dob)) {
+      alert("Please enter a valid date of birth (e.g., YYYY-MM-DD).");
+      return false;
+    }
+
+    // Check if matriculation obtained marks are a number between 0 and 1000
+    var matricObtainedMarksValue = parseFloat(matricObtainedMarks);
+    if (isNaN(matricObtainedMarksValue) || matricObtainedMarksValue < 0 || matricObtainedMarksValue > 1000) {
+      alert("Please enter a valid number for matriculation obtained marks between 0 and 1000.");
+      return false;
+    }
+    // Check if intermediate obtained marks are a number between 0 and 1000
+    var interObtainedMarksValue = parseFloat(interObtainedMarks);
+    if (isNaN(interObtainedMarksValue) || interObtainedMarksValue < 0 || interObtainedMarksValue > 1000) {
+      alert("Please enter a valid number for intermediate obtained marks between 0 and 1000.");
+      return false;
+    }
+
+    // Check if matriculation total marks are a number between 0 and 1000
+    var matricTotalMarksValue = parseFloat(matricTotalMarks);
+    if (isNaN(matricTotalMarksValue) || matricTotalMarksValue < 0 || matricTotalMarksValue > 1000) {
+      alert("Please enter a valid number for matriculation total marks between 0 and 1000.");
+      return false;
+    }
+
+    // Check if college graduation date is in a valid format (e.g., YYYY-MM-DD)
+    var collegeGraduationDatePattern = /^\d{4}-\d{2}-\d{2}$/;
+    if (!collegeGraduationDatePattern.test(collegeGraduationDate)) {
+      alert("Please enter a valid college graduation date (e.g., YYYY-MM-DD).");
+      return false;
+    }
+
+    // Check if matric graduation date is in a valid format (e.g., YYYY-MM-DD)
+    var matricGraduationDatePattern = /^\d{4}-\d{2}-\d{2}$/;
+    if (!matricGraduationDatePattern.test(matricGraduationDate)) {
+      alert("Please enter a valid matriculation graduation date (e.g., YYYY-MM-DD).");
+      return false;
+    }
+
+
+
+
+
+    return true;
+  }
+</script>
+
 </body>
 </html>

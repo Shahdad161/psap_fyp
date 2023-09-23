@@ -283,7 +283,8 @@ def registerasUni(request):
 
         # Redirect to the appropriate page after successful registration/update
         if 'signupasUni' in request.POST:
-            return render(request, 'loginasUni.html')
+            success_message = messages.success(request, 'Account created successfully. Please login.')
+            return render(request, 'loginasUni.html',{'success_message':success_message})
 
     else:
         return render(request, 'registerasUni.html')

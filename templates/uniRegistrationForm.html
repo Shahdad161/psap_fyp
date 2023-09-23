@@ -56,6 +56,7 @@
         action="/registerasUni/"
         method="post"
         id="contact_form"
+        onsubmit="return validateForm();"
       >
         {% csrf_token %}
         <fieldset>
@@ -182,7 +183,7 @@
                   name="hec_registration_number"
                   placeholder="123456789123"
                   class="form-control"
-                  type="text"
+                  type="number"
                 />
               </div>
             </div>
@@ -201,7 +202,7 @@
                 ></span>
                 <input
                   name="phone"
-                  placeholder="0852-8989161"
+                  placeholder="08528989161"
                   class="form-control"
                   type="number"
                 />
@@ -310,7 +311,7 @@
             <label class="col-md-4 control-label"></label>
             <div class="col-md-4 text-center">
               {% comment %} <a href=""></a> {% endcomment %}
-              <button onclick="alert('Data recorder! Please login.')"  name="signupasUni" type="submit" class="btn btn-lg btn-warning">Register</button>
+              <button  name="signupasUni" type="submit" class="btn btn-lg btn-warning">Register</button>
             </div>
           </div>
         </fieldset>
@@ -336,5 +337,83 @@
       integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
       crossorigin="anonymous"
     ></script>
+    <script>
+  // Function to validate the form
+  function validateForm() {
+    var universityName = document.forms["contact_form"]["university_name"].value;
+    var email = document.forms["contact_form"]["email"].value;
+    var password = document.forms["contact_form"]["password"].value;
+    var confirmPassword = document.forms["contact_form"]["confirm_password"].value;
+    var hecRecognized = document.forms["contact_form"]["hec_recognized"].value;
+    var hecRegistrationNumber = document.forms["contact_form"]["hec_registration_number"].value;
+    var phone = document.forms["contact_form"]["phone"].value;
+    var province = document.forms["contact_form"]["province"].value;
+    var city = document.forms["contact_form"]["city"].value;
+    var campus = document.forms["contact_form"]["campus"].value;
+    var zipCode = document.forms["contact_form"]["zip_code"].value;
+    var address = document.forms["contact_form"]["address"].value;
+
+    // Basic validation example (you can customize this as needed)
+    if (universityName == "") {
+      alert("University Name must be filled out");
+      return false;
+    }
+
+    if (email == "") {
+      alert("Email must be filled out");
+      return false;
+    }
+
+    if (password == "") {
+      alert("Password must be filled out");
+      return false;
+    }
+
+    if (password !== confirmPassword) {
+      alert("Passwords do not match");
+      return false;
+    }
+
+    if (hecRecognized == "No") {
+      alert("So, We only accept Hec Registered Universities");
+      return false;
+    }
+
+    if (hecRegistrationNumber == "") {
+      alert("HEC Registration Number must be filled out");
+      return false;
+    }
+
+    if (phone == "") {
+      alert("Phone # must be filled out");
+      return false;
+    }
+
+    if (province == "") {
+      alert("Please select a Province");
+      return false;
+    }
+
+    if (city == "") {
+      alert("City must be filled out");
+      return false;
+    }
+
+    if (campus == "") {
+      alert("Campus must be filled out");
+      return false;
+    }
+
+    if (zipCode == "") {
+      alert("Zip Code must be filled out");
+      return false;
+    }
+
+    if (address == "") {
+      alert("Address must be filled out");
+      return false;
+    }
+  }
+</script>
   </body>
 </html>
