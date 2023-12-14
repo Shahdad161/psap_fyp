@@ -2,6 +2,7 @@
 # Assuming you have a Student model defined for your database table
 # from .models import StdApplyAdmission
 # Import the User model if you're using it
+from .models import UniInfoTable, Testimonial
 from django.contrib.auth.models import User
 from .models import AppliedForAdmissionForm, StudentMeritData, Admission, StdInfoTable
 from .models import AppliedForAdmissionForm  # Import your model
@@ -33,10 +34,15 @@ password = ''
 
 
 def index(request):
-    universities = UniInfoTable.objects.all()  # Fetch all universities from the database
-    testimonials= Testimonial.objects.all()
-    context = {'universities': universities, 'testimonials':testimonials}
-    return render(request, 'index.html',context)
+    # Fetch the last 8 universities based on the id in descending order
+    universities = UniInfoTable.objects.all().order_by('-id')[:8]
+
+    # Fetch the last 10 testimonials based on the id in descending order
+    testimonials = Testimonial.objects.all().order_by('-id')[:10]
+
+    context = {'universities': universities, 'testimonials': testimonials}
+    return render(request, 'index.html', context)
+
 
 
 def uniOrStd(request):
