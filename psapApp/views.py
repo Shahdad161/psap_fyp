@@ -230,6 +230,7 @@ def uniHome(request):
         }
         return render(request, 'uniHome.html', context)
 
+# page display functiom
 
 def uniNewAdmissions(request):
     if request.session.get('authenticated') == True:
@@ -318,22 +319,34 @@ def uniUpdateForm(request):
             # Update the record
             c = "UPDATE psapapp_uniinfotable SET university_name=%s, hec_recognized=%s, hec_registration_number=%s, phone=%s, province=%s, city=%s, campus=%s, zip_code=%s, address=%s WHERE email=%s"
             cursor.execute(c, [university_name, hec_recognized, hec_registration_number,
-                           phone, province, city, campus, zip_code, address, email])
+                               phone, province, city, campus, zip_code, address, email])
             conn.commit()
 
             # Redirect to the uniHome page with a success message
             success_message = "Data updated successfully!"
-            return render(request, 'uniUpdateForm.html', {'success_message': success_message})
+            university_data = UniInfoTable.objects.get(email=email)
+            return render(request, 'uniUpdateForm.html', {'success_message': success_message, 'university_data': university_data})
 
         else:
             # Email and password do not match, show an error message
             error_messageInvalidEmail = "Invalid email or password. Please try again."
-            return render(request, 'uniUpdateForm.html', {'error_messageInvalidEmail': error_messageInvalidEmail})
+            university_data = UniInfoTable.objects.get(email=email)
+            return render(request, 'uniUpdateForm.html', {'error_messageInvalidEmail': error_messageInvalidEmail, 'university_data': university_data})
 
     else:
-        return render(request, 'uniUpdateForm.html')
+        if request.session.get('authenticated') == True:
+            email = request.session.get('email')
+            try:
+                university_data = UniInfoTable.objects.get(email=email)
+            except UniInfoTable.DoesNotExist:
+                # Handle the case where the record does not exist
+                return render(request, 'uniUpdateForm.html', {'error_messageInvalidEmail': "University data not found.", 'university_data': university_data})
+
+            # Render the form with existing data
+            return render(request, 'uniUpdateForm.html', {'university_data': university_data})
 
 
+# annouce button
 def announce_admissions(request):
     if request.method == 'POST':
         session = request.POST.get('session')
@@ -594,15 +607,28 @@ def stdUpdateForm(request):
 
             # Redirect to the update form page with a success message
             success_message = "Data updated successfully!"
-            return render(request, 'stdUpdate.html', {'success_message': success_message},)
+            student_data = StdInfoTable.objects.get(email=email)
+
+            return render(request, 'stdUpdate.html', {'success_message': success_message, 'student_data': student_data},)
 
         else:
             # Email and password do not match, show an error message
             error_message = "Invalid email or password. Please try again."
-            return render(request, 'stdUpdate.html', {'error_message': error_message},)
+            student_data = StdInfoTable.objects.get(email=email)
 
+            return render(request, 'stdUpdate.html', {'error_message': error_message, 'student_data': student_data},)
     else:
-        return render(request, 'stdUpdate.html')
+        if request.session.get('authenticated') == True:
+            email = request.session.get('email')
+            try:
+                student_data = StdInfoTable.objects.get(email=email)
+            except StdInfoTable.DoesNotExist:
+                # Handle the case where the record does not exist
+                return render(request, 'stdUpdate.html', {'error_messageInvalidEmail': "Student data not found.", 'student_data': student_data})
+
+            # Render the form with existing data
+            return render(request, 'stdUpdate.html', {'student_data': student_data})
+
 
 
 def apply_admission(request):

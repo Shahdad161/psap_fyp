@@ -43,6 +43,12 @@
       .input-group-btn {
         width: auto !important;
       }
+
+      /* Additional styles to make University Name and Email uneditable */
+    #email, #cnic {
+        pointer-events: none;
+        background-color: #ddd;
+    }
     </style>
 </head>
 <body class="main p-4">
@@ -96,6 +102,7 @@
                   placeholder="First Name"
                   class="form-control"
                   type="text"
+                  value="{{student_data.first_name}}"
                 />
               </div>
             </div>
@@ -115,12 +122,12 @@
                   placeholder="Last Name"
                   class="form-control"
                   type="text"
+                  value="{{student_data.last_name}}"
                 />
               </div>
             </div>
           </div>
           <!-- D.O.G -->
-
           <div class="form-group">
             <label class="col-md-4 control-label">D.O.B</label>
             <div class="col-md-4 inputGroupContainer">
@@ -128,7 +135,7 @@
                 <span class="input-group-addon"
                   ><i class="glyphicon glyphicon-calendar"></i
                 ></span>
-                <input name="dob" type="date" />
+                 <input id="dob" name="dob" type="date" value="{{ student_data.dob|date:'Y-m-d' }}" />
               </div>
             </div>
           </div>
@@ -143,32 +150,34 @@
                   ><i class="glyphicon glyphicon-asterisk"></i
                 ></span>
                 <input
+                  id="cnic"
                   name="cnic"
                   placeholder="123456789123"
                   class="form-control"
                   type="text"
+                  value="{{student_data.cnic}}"
                 />
               </div>
             </div>
           </div>
 
-          <!-- radio checks Gender -->
           <div class="form-group">
             <label class="col-md-4 control-label">Gender</label>
             <div class="col-md-4">
               <div class="radio">
                 <label>
-                  <input type="radio" name="gender" value="Male" /> Male
+                  <input type="radio" name="gender" value="Male" {% if student_data.gender == 'Male' %}checked{% endif %}/> Male
                 </label>
                 <label>
-                  <input type="radio" name="gender" value="Female" />Female
+                  <input type="radio" name="gender" value="Female" {% if student_data.gender == 'Female' %}checked{% endif %}/>Female
                 </label>
                 <label>
-                  <input type="radio" name="gender" value="Other" />Other
+                  <input type="radio" name="gender" value="Other" {% if student_data.gender == 'Other' %}checked{% endif %}/>Other
                 </label>
               </div>
             </div>
           </div>
+
 
           <!-- Text input-->
           <div class="form-group">
@@ -179,31 +188,17 @@
                   ><i class="glyphicon glyphicon-envelope"></i
                 ></span>
                 <input
+                  id="email"
                   name="email"
                   placeholder="E-Mail Address"
                   class="form-control"
                   type="text"
+                  value="{{student_data.email}}"
                 />
               </div>
             </div>
           </div>
 
-          <div class="form-group">
-            <label class="col-md-4 control-label">Password</label>
-            <div class="col-md-4 inputGroupContainer">
-              <div class="input-group">
-                <span class="input-group-addon"
-                  ><i class="glyphicon glyphicon-envelope"></i
-                ></span>
-                <input
-                  name="password"
-                  placeholder="Password"
-                  class="form-control"
-                  type="password"
-                />
-              </div>
-            </div>
-          </div>
 
           <!-- Text input-->
 
@@ -219,6 +214,7 @@
                   placeholder="03131234567"
                   class="form-control"
                   type="text"
+                  value="{{student_data.phone}}"
                 />
               </div>
             </div>
@@ -235,11 +231,11 @@
                 ></span>
                 <select name="province" class="form-control selectpicker">
                   <option value=" ">Province</option>
-                  <option>Punjab</option>
-                  <option>Sindh</option>
-                  <option>Baluchistan</option>
-                  <option>Peshawar</option>
-                  <option>Ex-Fata</option>
+                  <option {% if student_data.province == 'Punjab' %}selected{% endif %}>Punjab</option>
+                  <option {% if student_data.province == 'Sindh' %}selected{% endif %}>Sindh</option>
+                  <option {% if student_data.province == 'Baluchistan' %}selected{% endif %}>Baluchistan</option>
+                  <option {% if student_data.province == 'Peshawar' %}selected{% endif %}>Peshawar</option>
+                  <option {% if student_data.province == 'Ex-Fata' %}selected{% endif %}>Ex-Fata</option>
                 </select>
               </div>
             </div>
@@ -259,6 +255,8 @@
                   placeholder="city"
                   class="form-control"
                   type="text"
+                  value="{{student_data.city}}"
+                  
                 />
               </div>
             </div>
@@ -274,10 +272,12 @@
                   ><i class="glyphicon glyphicon-home"></i
                 ></span>
                 <input
-                  name="zip_code"
+                  name=""
                   placeholder="Zip Code"
                   class="form-control"
                   type="text"
+                  value="{{student_data.zip_code}}"
+                  
                 />
               </div>
             </div>
@@ -296,6 +296,8 @@
                   placeholder="Address"
                   class="form-control"
                   type="text"
+                  value="{{student_data.address}}"
+
                 />
               </div>
             </div>
@@ -318,11 +320,11 @@
                 ></span>
                 <select name="intermediate" class="form-control selectpicker">
                   <option value=" ">Select</option>
-                  <option>FSc pre-medical</option>
-                  <option>Fsc-Pre-engineering</option>
-                  <option>ICS</option>
-                  <option>ICOM</option>
-                  <option>A levels</option>
+                  <option {% if student_data.intermediate == 'FSc pre-medical' %}selected{% endif %}>FSc pre-medical</option>
+                  <option {% if student_data.intermediate == 'Fsc-Pre-engineering' %}selected{% endif %}>Fsc-Pre-engineering</option>
+                  <option {% if student_data.intermediate == 'ICS' %}selected{% endif %}>ICS</option>
+                  <option {% if student_data.intermediate == 'ICOM' %}selected{% endif %}>ICOM</option>
+                  <option {% if student_data.intermediate == 'A levels' %}selected{% endif %}>A levels</option>
                 </select>
               </div>
             </div>
@@ -341,22 +343,21 @@
                   placeholder="xyz"
                   class="form-control"
                   type="text"
+                  value="{{student_data.college_name}}"
+                  
                 />
               </div>
             </div>
           </div>
-          <!-- D.O.B -->
-
-          <div class="form-group">
-            <label class="col-md-4 control-label">College Graduation Date</label>
-            <div class="col-md-4 inputGroupContainer">
-              <div class="input-group">
-                <span class="input-group-addon"
-                  ><i class="glyphicon glyphicon-calendar"></i
-                ></span>
-                <input name="college_graduation_date" type="date" />
+          <!-- D.O.C.G -->
+            <div class="form-group">
+              <label class="col-md-4 control-label">College Graduation Date</label>
+              <div class="col-md-4 inputGroupContainer">
+                  <div class="input-group">
+                      <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                      <input name="college_graduation_date" type="date" value="{{ student_data.college_graduation_date|date:'Y-m-d' }}" />
+                  </div>
               </div>
-            </div>
           </div>
 
           <!-- Obtained marks -->
@@ -373,6 +374,8 @@
                   placeholder="0-1100"
                   class="form-control"
                   type="number"
+                  value="{{student_data.inter_obtained_marks}}"
+
                 />
               </div>
             </div>
@@ -391,11 +394,14 @@
                   placeholder="0-1100"
                   class="form-control"
                   type="number"
+                  value="{{student_data.inter_total_marks}}"
+
                 />
               </div>
             </div>
           </div>
           <!-- Matriculation -->
+           <!-- Intermediate -->
           <div class="form-group">
             <label class="col-md-4 control-label">Matriculation</label>
             <div class="col-md-4 selectContainer">
@@ -403,15 +409,16 @@
                 <span class="input-group-addon"
                   ><i class="glyphicon glyphicon-list"></i
                 ></span>
-                <select name="matriculation" class="form-control selectpicker">
+                <select name="intermediate" class="form-control selectpicker">
                   <option value=" ">Select</option>
-                  <option>Science</option>
-                  <option>Arts</option>
-                  <option>O levels</option>
+                  <option {% if student_data.matriculation == 'Science' %}selected{% endif %}>Science</option>
+                  <option {% if student_data.matriculation == 'Arts' %}selected{% endif %}>Arts</option>
+                  <option {% if student_data.matriculation == 'O levels' %}selected{% endif %}>O levels</option>
                 </select>
               </div>
             </div>
           </div>
+
           <!-- Text input-->
 
           <div class="form-group">
@@ -426,23 +433,24 @@
                   placeholder="xyz"
                   class="form-control"
                   type="text"
+                  value="{{student_data.school_name}}"
+
                 />
               </div>
             </div>
           </div>
-          <!-- D.O.B -->
+          <!-- D.O.g -->
 
           <div class="form-group">
-            <label class="col-md-4 control-label">Matric Graduation Date</label>
-            <div class="col-md-4 inputGroupContainer">
-              <div class="input-group">
-                <span class="input-group-addon"
-                  ><i class="glyphicon glyphicon-calendar"></i
-                ></span>
-                <input name="matric_graduation_date"type="date" />
+              <label class="col-md-4 control-label">Matric Graduation Date</label>
+              <div class="col-md-4 inputGroupContainer">
+                  <div class="input-group">
+                      <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                      <input name="matric_graduation_date" type="date" value="{{ student_data.matric_graduation_date|date:'Y-m-d' }}" />
+                  </div>
               </div>
-            </div>
           </div>
+
 
           <!-- Obtained marks -->
 
@@ -458,6 +466,9 @@
                   placeholder="0-1100"
                   class="form-control"
                   type="number"
+                  value="{{student_data.matric_obtained_marks}}"
+
+                  
                 />
               </div>
             </div>
@@ -476,6 +487,8 @@
                   placeholder="0-1100"
                   class="form-control"
                   type="number"
+                  value="{{student_data.matric_total_marks}}"
+
                 />
               </div>
             </div>
@@ -490,6 +503,7 @@
           </h1>
           <!-- Intermediate -->
           <!-- photo input-->
+          
 
           <div class="form-group">
             <label class="col-md-4 control-label">Photo</label>
@@ -503,6 +517,8 @@
                   placeholder="xyz"
                   class="form-control"
                   type="file"
+                  value="{{student_data.self_photo}}"
+                  
                 />
               </div>
             </div>
@@ -596,7 +612,26 @@
               </div>
             </div>
           </div>
-
+          <hr />
+            
+          <div class="form-group">
+            <p class="text-center"> <small> <i>To Save Changes Please confirm your Password</small></i></p>
+            <label class="col-md-4 control-label">Password</label>
+            <div class="col-md-4 inputGroupContainer">
+              <div class="input-group">
+                <span class="input-group-addon"
+                  ><i class="glyphicon glyphicon-envelope"></i
+                ></span>
+                <input
+                  name="password"
+                  placeholder="Password"
+                  class="form-control"
+                  type="password"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
           <!-- Button -->
           <div class="form-group">
             <label class="col-md-4 control-label"></label>
