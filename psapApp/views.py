@@ -230,6 +230,12 @@ def uniHome(request):
             "SELECT university_name FROM psapapp_uniinfotable WHERE email=%s", [email])
         uniName = cursor.fetchone()[0]
         admissions = Admission.objects.filter(university_name=uniName)
+
+        # Query and count the number of students applied for each admission
+        for admission in admissions:
+            admission.students_applied = StudentMeritData.objects.filter(
+                selected_university=uniName, department=admission.departments).count()
+
         context = {
             'admissions': admissions,
             'uniName': uniName,
@@ -395,10 +401,17 @@ def announce_admissions(request):
         admission.save()
 
         admissions = Admission.objects.filter(university_name=uniName)
+
+        # Query and count the number of students applied for each admission
+        for admission in admissions:
+            admission.students_applied = StudentMeritData.objects.filter(
+                selected_university=uniName, department=admission.departments).count()
+
         context = {
             'admissions': admissions,
             'uniName': uniName,
         }
+
         return render(request, 'uniHome.html', context)
 
     return render(request, 'uniHome.html', {'uniName': uniName})

@@ -266,52 +266,6 @@
         </form>
     </div>
 
-    <!-- /.container -->
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    {% comment %} form validation function {% endcomment %}
-{% comment %} <script>
-    $(document).ready(function () {
-        // Function to handle changes in admission test option
-        $("select[name='admission_test']").change(function () {
-            var admissionTest = $(this).val();
-            if (admissionTest === "Not required") {
-                $("input[name='Test_required_percentage_percentage']").val(0);
-                $("input[name='Test_required_percentage_percentage']").prop("readonly", true);
-            } else {
-                $("input[name='Test_required_percentage_percentage']").val("");
-                $("input[name='Test_required_percentage_percentage']").prop("readonly", false);
-            }
-        });
-
-        // Function to handle form submission
-        $("#contact_form").submit(function (event) {
-            // Validate start and end date
-            var startDate = new Date($("input[name='start_date']").val());
-            var endDate = new Date($("input[name='end_date']").val());
-            var today = new Date();
-
-            if (startDate >= endDate|| endDate <= today || startDate < today) {
-                alert("Invalid start or end date");
-                event.preventDefault(); // Prevent form submission
-            }
-
-            // Validate all visible fields to ensure they are not empty
-            var formIsValid = true;
-            $("form#contact_form :input:visible").not(":button").each(function () {
-                if ($(this).val().trim() === "") {
-                    alert("All fields must be filled out");
-                    formIsValid = false;
-                    return false; // Exit the loop early
-                }
-            });
-
-            if (!formIsValid) {
-                event.preventDefault(); // Prevent form submission
-            }
-        });
-    });
-</script> {% endcomment %}
 <script>
 $(document).ready(function () {
     // Function to handle changes in admission test option
