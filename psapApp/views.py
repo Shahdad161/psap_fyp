@@ -2,6 +2,7 @@
 # Assuming you have a Student model defined for your database table
 # from .models import StdApplyAdmission
 # Import the User model if you're using it
+from datetime import datetime
 from .models import UniInfoTable, Testimonial
 from django.contrib.auth.models import User
 from .models import AppliedForAdmissionForm, StudentMeritData, Admission, StdInfoTable
@@ -359,6 +360,66 @@ def uniUpdateForm(request):
 
 
 # annouce button
+# def announce_admissions(request):
+#     if request.method == 'POST':
+#         session = request.POST.get('session')
+#         campus = request.POST.get('campus')
+#         program = request.POST.get('program')
+#         admission_test = request.POST.get('admission_test')
+#         no_of_shortlisted_students = request.POST.get(
+#             'no_of_shortlisted_students')
+#         intermediate_required_percentage = request.POST.get(
+#             'intermedaite_required_percentage')
+#         bachelor_required_percentage = request.POST.get(
+#             'bachelor_required_percentage')
+#         test_required_percentage = request.POST.get(
+#             'Test_required_percentage_percentage')
+#         departments_list = request.POST.getlist('department')
+#         start_date = request.POST.get('start_date')
+#         end_date = request.POST.get('end_date')
+#         email = request.session.get('email')
+#         cursor = conn.cursor()
+#         cursor.execute(
+#             "SELECT university_name FROM psapapp_uniinfotable WHERE email=%s", [email])
+#         uniName = cursor.fetchone()[0]
+
+
+#         # Join the list of department names into a comma-separated string
+#         departments = ', '.join(departments_list)
+
+#         admission = Admission(
+#             session=session,
+#             campus=campus,
+#             program=program,
+#             admission_test=admission_test,
+#             no_of_shortlisted_students=no_of_shortlisted_students,
+#             intermediate_required_percentage=intermediate_required_percentage,
+#             bachelor_required_percentage=bachelor_required_percentage,
+#             test_required_percentage=test_required_percentage,
+#             start_date=start_date,
+#             end_date=end_date,
+#             departments=departments,
+#             university_name=uniName,
+#         )
+#         admission.save()
+
+#         admissions = Admission.objects.filter(university_name=uniName)
+
+#         # Query and count the number of students applied for each admission
+#         for admission in admissions:
+#             admission.students_applied = StudentMeritData.objects.filter(
+#                 selected_university=uniName, department=admission.departments).count()
+
+#         context = {
+#             'admissions': admissions,
+#             'uniName': uniName,
+#         }
+
+#         return render(request, 'uniHome.html', context)
+
+#     return render(request, 'uniHome.html', {'uniName': uniName})
+
+
 def announce_admissions(request):
     if request.method == 'POST':
         session = request.POST.get('session')
@@ -381,6 +442,21 @@ def announce_admissions(request):
         cursor.execute(
             "SELECT university_name FROM psapapp_uniinfotable WHERE email=%s", [email])
         uniName = cursor.fetchone()[0]
+
+        # Check if there is already an ongoing admission for the same session
+        existing_admission = Admission.objects.filter(
+            university_name=uniName,
+            session=session,
+            start_date__lte=end_date,
+            end_date__gte=start_date,
+        ).exists()
+
+        if existing_admission:
+            messages.error(
+                request, "Admission for this session is already ongoing.")
+            # Adjust the URL name to your view
+            return redirect('uniNewAdmissions')
+
         # Join the list of department names into a comma-separated string
         departments = ', '.join(departments_list)
 
@@ -716,7 +792,10 @@ def download_merit_list(request, university_name, department):
     merit_list = StudentMeritData.objects.filter(selected_university=university_name, department=department).order_by('-merit_percentage')
 
     if not merit_list:
-        raise Http404("No students found in the merit list for this department.")
+        messages.error(
+            request, "We are sorry no students have applied yet")
+        # Adjust the URL name to your view
+        return redirect('uniHome')
 
     # Fetch all test marks for the students in the merit list
     student_emails = [entry.student_info.email for entry in merit_list]

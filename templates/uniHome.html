@@ -72,6 +72,7 @@
   <div class="main p-5">
     <div class="container inner-main">
       <h2 class="text-center">{{ uniName }} Dashboard</h2>
+
       <div class="row mt-4">
         <div class="col-6">
           <h1>On-going Admissions</h1>
@@ -96,7 +97,8 @@
             {% for admission in admissions %}
             <tr>
               <td>{{ admission.campus }}</td>
-              <td>{{ admission.session }}</td>
+              <td>{{ admission.session }} {{ admission.start_date|date:"Y" }}</td>
+
               <td>{{ admission.program }}</td>
               <td>{{ admission.start_date }}</td>
               <td>{{ admission.end_date }}</td>
@@ -109,15 +111,34 @@
         </table>
       </div>
       <hr />
+
+{% if messages %}
+    <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <ul class="list-unstyled">
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
       <div class="row mt-4">
+        
         <div class="col-6">
+
           <h1>Received Merit Lists</h1>
         </div>
+
       </div>
+
+
       <div class="table-responsive">
         <table class="table table-hover table-striped">
           <thead>
             <tr>
+              <th>Session</th>
               <th>Program</th>
               <th>Department</th>
               <th>Status</th>
@@ -129,10 +150,13 @@
           <tbody>
             {% for admission in admissions %}
             <tr>
+              <td>{{ admission.session }} {{ admission.start_date|date:"Y" }}</td>
+
+              
               <td>{{ admission.program }}</td>
               <td>{{ admission.departments }}</td>
               <td>
-                {% if admission.no_of_required_students == admission.students_applied %}
+                {% if admission.no_of_shortlisted_students == admission.students_applied %}
                   Complete
                 {% else %}
                   Incomplete

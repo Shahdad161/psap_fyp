@@ -42,15 +42,26 @@
     </style>
 
     <body class="main p-4">
+ 
     <div class="container">
         <form class="well form-horizontal" action="{% url 'announce_admissions' %}" method="post" id="contact_form">
             {% csrf_token %} <!-- Add CSRF token for form security -->
             <fieldset>
+                
+
                 <!-- Form Name -->
                 <legend>
                     <a href="{% url 'uniHome' %}" class="btn btn-lg btn-danger">Back</a> 
                          <h3 class="text-right">{{ uniName }}<h3> 
-
+                        {% if messages %}
+                            <div class="alert text-center alert-danger">
+                                <ul class="list-unstyled">
+                                    {% for message in messages %}
+                                        <li>{{ message }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
                     <div>
                         <h1 class="text-center">
                             <b>Announce new Admission</b>
