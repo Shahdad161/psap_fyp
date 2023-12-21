@@ -56,6 +56,7 @@ class Admission(models.Model):
     end_date = models.DateField(default=datetime.date.today)
     departments = models.CharField(max_length=100)
     university_name = models.CharField(max_length=100)
+    is_closed = models.BooleanField(default=False)  # Add this field
 
     def __str__(self):
         return f"{self.session} - {self.program}"

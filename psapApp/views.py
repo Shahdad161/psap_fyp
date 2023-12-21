@@ -2,6 +2,9 @@
 # Assuming you have a Student model defined for your database table
 # from .models import StdApplyAdmission
 # Import the User model if you're using it
+from .models import StudentMeritData, AppliedForAdmissionForm, Admission
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+from django.shortcuts import render, redirect, get_object_or_404
 from datetime import datetime
 from .models import UniInfoTable, Testimonial
 from django.contrib.auth.models import User
@@ -783,10 +786,10 @@ from .models import StudentMeritData, Admission
 from django.http import Http404
 
 
-
-def download_merit_list(request, university_name, department):
+def download_merit_list(request, university_name, department, start_date):
     # Get the Admission object for the specified university and department
-    admission = get_object_or_404(Admission, university_name=university_name, departments=department)
+    admission = get_object_or_404(
+        Admission, university_name=university_name, departments=department, start_date=start_date)
 
     # Query the StudentMeritData model to filter by university and department
     merit_list = StudentMeritData.objects.filter(selected_university=university_name, department=department).order_by('-merit_percentage')
@@ -874,6 +877,7 @@ def download_merit_list(request, university_name, department):
 
 
 
+
 # views.py
 from django.shortcuts import render, redirect
 from .models import Testimonial
@@ -901,3 +905,16 @@ def submit_testimonial(request):
             return redirect('submit_testimonial')  # Redirect to a success page
     
     return render(request, 'submit_testimonial.html')
+
+
+# close admissions
+def close_admission(request, admission_id):
+    # Get the Admission object based on the admission_id
+    admission = get_object_or_404(Admission, id=admission_id)
+
+    # Update the is_closed field to True
+    admission.is_closed = True
+    admission.save()
+
+    # Redirect back to the dashboard or another appropriate page
+    return redirect('uniHome')  # Assuming you have a URL name 'dashboard'

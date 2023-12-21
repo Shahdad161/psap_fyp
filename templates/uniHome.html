@@ -103,7 +103,11 @@
               <td>{{ admission.start_date }}</td>
               <td>{{ admission.end_date }}</td>
               <td>
-                <button type="submit" class="btn btn-danger">Close Admissions</button>
+                  {% if not admission.is_closed %}
+                      <a href="{% url 'close_admission' admission.id %}" class="btn btn-danger">Close Admission</a>
+                  {% else %}
+                      Admission Closed
+                  {% endif %}
               </td>
             </tr>
             {% endfor %}
@@ -165,7 +169,10 @@
               <td>{{ admission.no_of_shortlisted_students }}</td>
               <td>{{ admission.students_applied }}</td>
               <td>
-                <a href="{% url 'download_merit_list' admission.university_name admission.departments %}" class="btn btn-primary">Download</a>
+                {% comment %} <a href="{% url 'download_merit_list' admission.university_name admission.departments %}" class="btn btn-primary">Download</a> {% endcomment %}
+                <!-- Example in a template -->
+                <a href="{% url 'download_merit_list' admission.university_name admission.departments admission.start_date %}"class="btn btn-primary">Download</a>
+
               </td>
             </tr>
             {% endfor %}

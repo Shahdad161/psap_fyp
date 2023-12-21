@@ -33,9 +33,12 @@ urlpatterns = [
     path('stdApplyAdmission/', views.apply_admission, name='stdApplyAdmission'),
     path('delete-merit/<int:merit_id>/', views.delete_merit_data, name='delete_merit_data'),
     
-#     path('download_merit_list/<str:department>/', views.download_merit_list, name='download_merit_list'),
-    path('download_merit_list/<str:university_name>/<str:department>/', views.download_merit_list, name='download_merit_list'),
+
+    path('download_merit_list/<str:university_name>/<str:department>/<str:start_date>/',
+         views.download_merit_list, name='download_merit_list'),
       path('submit/', views.submit_testimonial, name='submit_testimonial'),
+    path('close_admission/<int:admission_id>/',
+         views.close_admission, name='close_admission'),
     
 
     #     path('apply_admissionSaveIntoTable/', views.apply_admissionSaveIntoTable,
