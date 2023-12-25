@@ -838,19 +838,31 @@ def download_merit_list(request, university_name, department, start_date):
     )
 
     # Define data for the table
-    table_data = [['CNIC', 'Student Name', 'Intermediate Marks',
-                   'Matric Marks', 'Test Marks', 'Merit Percentage']]
+    table_header = ['CNIC', 'Student Name',
+                    'Intermediate Marks', 'Matric Marks', 'Merit Percentage']
+    table_data = []
 
+    # Check if any test marks are non-zero
+    include_test_marks = any(test_marks_dict.values())
+    if include_test_marks:
+        # If at least one test mark is non-zero, include the "Test Marks" column in the header
+        table_header.insert(4, 'Test Marks')
 
     for entry in merit_list:
         student_info = entry.student_info  # This gets the related StdInfoTable object
-        test_marks = test_marks_dict.get(student_info.email, "N/A")
+        test_marks = test_marks_dict.get(student_info.email, 0)
 
-        table_data.append([student_info.cnic, student_info.first_name + " " + student_info.last_name,
-                           student_info.inter_obtained_marks, student_info.matric_obtained_marks, test_marks, entry.merit_percentage])
+        row = [student_info.cnic, student_info.first_name + " " + student_info.last_name,
+               student_info.inter_obtained_marks, student_info.matric_obtained_marks, entry.merit_percentage]
+
+        # Include the test marks if any are non-zero
+        if include_test_marks:
+            row.insert(4, test_marks)
+
+        table_data.append(row)
 
     # Create the table
-    table = Table(table_data)
+    table = Table([table_header] + table_data)
     table_style = TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
@@ -866,6 +878,7 @@ def download_merit_list(request, university_name, department, start_date):
 
     # Build the PDF document
     story = []
+
     title_text = f'Merit List ({", ".join(unique_campuses)})'
     title = Paragraph(title_text, title_style)
     subtitle = Paragraph(
@@ -881,9 +894,6 @@ def download_merit_list(request, university_name, department, start_date):
     buffer.close()
 
     return response
-
-
-
 
 # views.py
 from django.shortcuts import render, redirect
