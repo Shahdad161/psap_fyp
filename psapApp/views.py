@@ -1024,7 +1024,8 @@ def get_department_details(request):
 
 
 def ongoing_admissions(request):
-    ongoing_admissions = Admission.objects.filter(is_closed=False)
+    ongoing_admissions = Admission.objects.filter(
+        is_closed=False).order_by('university_name')
     context = {
         'ongoing_admissions': ongoing_admissions,
     }
