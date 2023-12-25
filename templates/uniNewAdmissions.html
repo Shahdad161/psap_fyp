@@ -69,15 +69,15 @@
                     </div>
                 </legend>
                 <hr>
-                {% comment %} select campus {% endcomment %}
+                {% comment %} select campus replaced to year {% endcomment %}
                 <div class="form-group">
-                    <label class="col-md-4 control-label">Campus name</label>
+                    <label class="col-md-4 control-label">Year</label>
                     <div class="col-md-4 selectContainer">
                         <div class="input-group">
                             <span class="input-group-addon"
-                                ><i class="glyphicon glyphicon-list"></i
+                                ><i class="glyphicon glyphicon-calendar"></i
                             ></span>
-                           <input type="text" class="form-control" name="campus">
+                           <input type="Number" placeholder="Example: 2023" class="form-control" name="campus">
                         </div>
                     </div>
                 </div>
@@ -87,7 +87,7 @@
                     <label class="col-md-4 control-label">Session</label>
                     <div class="col-md-4 selectContainer">
                         <div class="input-group">
-                            <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                             <select name="session" class="form-control selectpicker">
                                 <option value="">Select</option>
                                 <option>Fall</option>
@@ -99,17 +99,17 @@
                     </div>
                 </div>
 
-                <!--Program-->
+                <!-- Program -->
                 <div class="form-group">
                     <label class="col-md-4 control-label">Choose Program</label>
                     <div class="col-md-4 selectContainer">
                         <div class="input-group">
-                            <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-list-alt"></i></span>
                             <select name="program" class="form-control selectpicker">
                                 <option value="">Select</option>
                                 <option>Bachelors/BS</option>
-                                <option>MS/M.phil</option>
-                                <option>Phd</option>
+                                <option disabled>MS/M.phil (Coming Soon)</option>
+                                <option disabled>Phd (Coming Soon)</option>
                             </select>
                         </div>
                     </div>
@@ -120,12 +120,20 @@
                     <label class="col-md-4 control-label">Required Admission test</label>
                     <div class="col-md-4 selectContainer">
                         <div class="input-group">
-                            <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-pencil"></i></span>
                             <select name="admission_test" class="form-control selectpicker">
                                 <option value="">Select</option>
                                 <option>Not required</option>
+                                <option>Departmental/University</option>
                                 <option>NTS NAT</option>
-                                <option>ECAT</option>
+                                <option>NTS GAT</option>
+                                <option>HEC HAT 1 </option>
+                                <option>HEC HAT 2</option>
+                                <option>HEC HAT 3</option>
+                                <option>HEC HAT 4</option>
+                                <option>HEC USAT </option>
+                                <option>HEC USAT </option>
+                                <option>ECAT </option>
                                 <option>MCAT</option>
                             </select>
                         </div>
@@ -143,7 +151,7 @@
                         ></span>
                         <input
                         name="no_of_shortlisted_students"
-                        placeholder="50"
+                        placeholder="Example: 50"
                         class="form-control"
                         type="Number"
                         />
@@ -153,7 +161,7 @@
                 
                 <!-- Number of students to be shortlisted-->
                 <div class="form-group">
-                    <label class="col-md-4 control-label">merit calculation</label>
+                    <label class="col-md-4 control-label">Merit Calculation Formula</label>
                     <div class="col-md-4 inputGroupContainer">
                         <label>Intermedaite required Percentage</label>
 
@@ -162,17 +170,17 @@
                             ><i class="glyphicon glyphicon-asterisk"></i
                             ></span>
                             <input
-                            name="intermedaite_required_percentage"
-                            placeholder="50"
+                            name="intermediate_required_percentage"
+                            placeholder="Example: 50"
                             class="form-control"
                             type="Number"
                             />
-                    </div>
+                        </div>
                     </div>
                 </div>
                 <!-- Number of students to be shortlisted-->
                 <div class="form-group">
-                    <label class="col-md-4 control-label">merit calculation</label>
+                    <label class="col-md-4 control-label"></label>
                     <div class="col-md-4 inputGroupContainer">
                         <label> Matric required Percentage </label>
 
@@ -182,7 +190,7 @@
                             ></span>
                             <input
                             name="bachelor_required_percentage"
-                            placeholder="50"
+                            placeholder="Example: 50"
                             class="form-control"
                             type="Number"
                             />
@@ -191,50 +199,129 @@
                 </div>
                 <!-- Number of students to be shortlisted-->
                 <div class="form-group">
-                    <label class="col-md-4 control-label">merit calculation</label>
+                    <label class="col-md-4 control-label"></label>
                     <div class="col-md-4 inputGroupContainer">
-                        <label>Test required percentage Percentage</label>
+                        <label>Test required Percentage</label>
 
                         <div class="input-group">
                             <span class="input-group-addon">   <i class="glyphicon glyphicon-asterisk"></i
                             ></span>
                                 <input
-                                name="Test_required_percentage_percentage"
-                                placeholder="50"
+                                name="test_required_percentage"
+                                placeholder="Example: 50"
                                 class="form-control"
                                 type="Number"
                                 />
                         </div>
                     </div>
                 </div>
-                <!-- Number of students to be shortlisted-->
+
+
+                <div class="form-group">
+                    <label class="col-md-4 control-label">Other Requirements</label>
+                    <div class="col-md-4 inputGroupContainer">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-info-sign"></i></span>
+                            <textarea
+                                name="other_requirements"
+                                placeholder="Enter other requirements here"
+                                class="form-control"
+                            ></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                                {% comment %} Application fees {% endcomment %}
+                <div class="form-group">
+                    <label class="col-md-4 control-label">Application Fees</label>
+                    <div class="col-md-4 inputGroupContainer">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-usd"></i></span>
+                            <input
+                                name="application_fees"
+                                placeholder="Example: 1000"
+                                class="form-control"
+                                type="number"
+                            />
+                        </div>
+                    </div>
+                </div>
+                {% comment %} Bank name {% endcomment %}
+                <div class="form-group">
+                    <label class="col-md-4 control-label">Bank Name</label>
+                    <div class="col-md-4 inputGroupContainer">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-briefcase"></i></span>
+                            <input
+                                name="bank_name"
+                                placeholder="Example: ABC Bank"
+                                class="form-control"
+                                type="text"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                {% comment %} account title {% endcomment %}
+
+                <div class="form-group">
+                    <label class="col-md-4 control-label">Account Title</label>
+                    <div class="col-md-4 inputGroupContainer">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                            <input
+                                name="account_title"
+                                placeholder="Example: University Admissions"
+                                class="form-control"
+                                type="text"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                {% comment %} account number {% endcomment %}
+                <div class="form-group">
+                    <label class="col-md-4 control-label">Account Number</label>
+                    <div class="col-md-4 inputGroupContainer">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-credit-card"></i></span>
+                            <input
+                                name="account_number"
+                                placeholder="Example: 123456789"
+                                class="form-control"
+                                type="text"
+                            />
+                        </div>
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <label class="col-md-4 control-label">Start Date</label>
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
                             <span class="input-group-addon"
-                            ><i class="glyphicon glyphicon-asterisk"></i
+                            ><i class="glyphicon glyphicon-calendar"></i
                             ></span>
                             <input
                             name="start_date"
-                            placeholder="50"
+                            placeholder="Example: 50"
                             class="form-control"
                             type="date"
                             />
                         </div>
                     </div>
                 </div>
-                <!-- Number of students to be shortlisted-->
+
                 <div class="form-group">
                     <label class="col-md-4 control-label">End Date</label>
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
                             <span class="input-group-addon"
-                            ><i class="glyphicon glyphicon-asterisk"></i
+                            ><i class="glyphicon glyphicon-calendar"></i
                             ></span>
                             <input
                             name="end_date"
-                            placeholder="50"
+                            placeholder="Example: 50"
                             class="form-control"
                             type="date"
                             />
@@ -277,38 +364,46 @@
         </form>
     </div>
 
-<script>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    </body>
+    </html>
+
+
+    <script>
 $(document).ready(function () {
     // Function to handle changes in admission test option
     $("select[name='admission_test']").change(function () {
         var admissionTest = $(this).val();
         if (admissionTest === "Not required") {
-            $("input[name='Test_required_percentage_percentage']").val(0);
-            $("input[name='Test_required_percentage_percentage']").prop("readonly", true);
+            $("input[name='test_required_percentage']").val(0);
+            $("input[name='test_required_percentage']").prop("readonly", true);
 
             // When the test is not required, calculate and display matric percentage based on intermediate
-            var intermediatePercentage = parseFloat($("input[name='intermedaite_required_percentage']").val()) || 0;
+            var intermediatePercentage = parseFloat($("input[name='intermediate_required_percentage']").val()) || 0;
             var matricPercentage = 100 - intermediatePercentage;
             $("input[name='bachelor_required_percentage']").val(matricPercentage.toFixed(2));
             // Make the auto-driven matric percentage non-editable
             $("input[name='bachelor_required_percentage']").prop("readonly", true);
         } else {
             // When the test is required, reset test percentage to zero and make it editable
-            $("input[name='Test_required_percentage_percentage']").val("");
-            $("input[name='Test_required_percentage_percentage']").prop("readonly", true);
+            $("input[name='test_required_percentage']").val("");
+            $("input[name='test_required_percentage']").prop("readonly", true);
 
             // Calculate and display test percentage based on the remaining percentage from intermediate and matric
-            var intermediatePercentage = parseFloat($("input[name='intermedaite_required_percentage']").val()) || 0;
+            var intermediatePercentage = parseFloat($("input[name='intermediate_required_percentage']").val()) || 0;
             var matricPercentage = parseFloat($("input[name='bachelor_required_percentage']").val()) || 0;
             var testPercentage = 100 - intermediatePercentage - matricPercentage;
-            $("input[name='Test_required_percentage_percentage']").val(testPercentage.toFixed(2));
+            $("input[name='test_required_percentage']").val(testPercentage.toFixed(2));
             // Make the auto-driven test percentage non-editable
-            $("input[name='Test_required_percentage_percentage']").prop("readonly", true);
+            $("input[name='test_required_percentage']").prop("readonly", true);
         }
     });
 
     // Function to handle changes in intermediate percentage
-    $("input[name='intermedaite_required_percentage']").keyup(function () {
+    $("input[name='intermediate_required_percentage']").keyup(function () {
         var intermediatePercentage = parseFloat($(this).val()) || 0;
         if ($("select[name='admission_test']").val() === "Not required") {
             var matricPercentage = 100 - intermediatePercentage;
@@ -318,9 +413,9 @@ $(document).ready(function () {
             // When the test is required, recalculate and display test percentage based on the remaining percentage from intermediate and matric
             var matricPercentage = parseFloat($("input[name='bachelor_required_percentage']").val()) || 0;
             var testPercentage = 100 - intermediatePercentage - matricPercentage;
-            $("input[name='Test_required_percentage_percentage']").val(testPercentage.toFixed(2));
+            $("input[name='test_required_percentage']").val(testPercentage.toFixed(2));
             // Make the auto-driven test percentage non-editable
-            $("input[name='Test_required_percentage_percentage']").prop("readonly", true);
+            $("input[name='test_required_percentage']").prop("readonly", true);
         }
     });
 
@@ -329,15 +424,15 @@ $(document).ready(function () {
         var matricPercentage = parseFloat($(this).val()) || 0;
         if ($("select[name='admission_test']").val() === "Not required") {
             var intermediatePercentage = 100 - matricPercentage;
-            $("input[name='intermedaite_required_percentage']").val(intermediatePercentage.toFixed(2));
-           // $("input[name='intermedaite_required_percentage']").prop("readonly", true);
+            $("input[name='intermediate_required_percentage']").val(intermediatePercentage.toFixed(2));
+           // $("input[name='intermediate_required_percentage']").prop("readonly", true);
         } else {
             // When the test is required, recalculate and display test percentage based on the remaining percentage from intermediate and matric
-            var intermediatePercentage = parseFloat($("input[name='intermedaite_required_percentage']").val()) || 0;
+            var intermediatePercentage = parseFloat($("input[name='intermediate_required_percentage']").val()) || 0;
             var testPercentage = 100 - intermediatePercentage - matricPercentage;
-            $("input[name='Test_required_percentage_percentage']").val(testPercentage.toFixed(2));
+            $("input[name='test_required_percentage']").val(testPercentage.toFixed(2));
             // Make the auto-driven test percentage non-editable
-            $("input[name='Test_required_percentage_percentage']").prop("readonly", true);
+            $("input[name='test_required_percentage']").prop("readonly", true);
         }
     });
 
@@ -348,7 +443,7 @@ $(document).ready(function () {
         var endDate = new Date($("input[name='end_date']").val());
         var today = new Date();
 
-        if (startDate >= endDate || endDate <= today || startDate < today) {
+        if (today == startDate && today <= endDate) {
             alert("Invalid start or end date");
             event.preventDefault(); // Prevent form submission
         }
@@ -364,9 +459,9 @@ $(document).ready(function () {
         });
 
         // Validate total percentage
-        var totalPercentage = parseFloat($("input[name='intermedaite_required_percentage']").val()) || 0;
+        var totalPercentage = parseFloat($("input[name='intermediate_required_percentage']").val()) || 0;
         totalPercentage += parseFloat($("input[name='bachelor_required_percentage']").val()) || 0;
-        totalPercentage += parseFloat($("input[name='Test_required_percentage_percentage']").val()) || 0;
+        totalPercentage += parseFloat($("input[name='test_required_percentage']").val()) || 0;
 
         if (totalPercentage > 100 ||totalPercentage < 0) {
             alert("Total percentage cannot exceed 100%");
@@ -381,19 +476,19 @@ $(document).ready(function () {
 $("select[name='admission_test']").change(function () {
     var admissionTest = $(this).val();
     if (admissionTest === "Not required") {
-        $("input[name='Test_required_percentage_percentage']").val(0);
-        $("input[name='Test_required_percentage_percentage']").prop("readonly", true);
+        $("input[name='test_required_percentage']").val(0);
+        $("input[name='test_required_percentage']").prop("readonly", true);
 
         // When the test is not required, calculate and display matric percentage based on intermediate
-        var intermediatePercentage = parseFloat($("input[name='intermedaite_required_percentage']").val()) || 0;
+        var intermediatePercentage = parseFloat($("input[name='intermediate_required_percentage']").val()) || 0;
         var matricPercentage = 100 - intermediatePercentage;
         $("input[name='bachelor_required_percentage']").val(matricPercentage.toFixed(2));
         // Make the auto-driven matric percentage non-editable
         $("input[name='bachelor_required_percentage']").prop("readonly", true);
     } else {
         // When the test is required, reset test percentage to zero and make it editable
-        $("input[name='Test_required_percentage_percentage']").val("");
-        $("input[name='Test_required_percentage_percentage']").prop("readonly", false);
+        $("input[name='test_required_percentage']").val("");
+        $("input[name='test_required_percentage']").prop("readonly", false);
 
         // Reset matric percentage to an empty state and make it editable
         $("input[name='bachelor_required_percentage']").val("");
@@ -401,11 +496,4 @@ $("select[name='admission_test']").change(function () {
     }
 });
 
-
 </script>
-
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    </body>
-    </html>

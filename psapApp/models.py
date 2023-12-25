@@ -1,3 +1,4 @@
+from django_cleanup import cleanup  # Import the cleanup module
 import datetime
 from django.db import models
 
@@ -19,6 +20,8 @@ class UniInfoTable(models.Model):
     def __str__(self):
         return self.university_name
 
+
+# models.py
 
 class Admission(models.Model):
     SESSION_CHOICES = (
@@ -57,9 +60,30 @@ class Admission(models.Model):
     departments = models.CharField(max_length=100)
     university_name = models.CharField(max_length=100)
     is_closed = models.BooleanField(default=False)  # Add this field
-
+    account_number = models.CharField(max_length=20)
+    application_fees = models.DecimalField(max_digits=8, decimal_places=2)
+    bank_name = models.CharField(max_length=100)
+    account_title = models.CharField(max_length=100)
+    other_requirements = models.TextField(null=True)
     def __str__(self):
         return f"{self.session} - {self.program}"
+
+    def delete(self, *args, **kwargs):
+        # Delete associated data
+        StudentMeritData.objects.filter(
+            selected_university=self.university_name,
+            campus=self.campus,
+            department=self.departments,
+        ).delete()
+
+        AppliedForAdmissionForm.objects.filter(
+            university=self.university_name,
+            campus=self.campus,
+            department=self.departments,
+        ).delete()
+
+        # Call the delete method of the base class
+        super().delete(*args, **kwargs)
 
 
 # Student work
@@ -109,7 +133,7 @@ class AppliedForAdmissionForm(models.Model):
     campus = models.CharField(max_length=100)
     program = models.CharField(max_length=100)
     department = models.CharField(max_length=100)
-    required_test = models.CharField(max_length=100)
+    required_test = models.CharField(max_length=100, null=True, blank=True)
     test_obtained_marks = models.IntegerField()
     test_total_marks = models.IntegerField()
     fees_slip = models.FileField(upload_to='fees_slips/')

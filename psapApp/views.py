@@ -2,6 +2,9 @@
 # Assuming you have a Student model defined for your database table
 # from .models import StdApplyAdmission
 # Import the User model if you're using it
+from .models import Admission  # Import your Admission model
+from django.db import transaction
+from django.db import IntegrityError
 from .models import StudentMeritData, AppliedForAdmissionForm, Admission
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
 from django.shortcuts import render, redirect, get_object_or_404
@@ -92,6 +95,7 @@ def stdHome(request):
 from django.shortcuts import render, redirect
 from .models import Admission, AppliedForAdmissionForm
 
+
 def stdApplied(request):
     if request.session.get('authenticated') == True:
         email = request.session.get('email')
@@ -107,8 +111,9 @@ def stdApplied(request):
                 program = request.POST.get('program')
                 department = request.POST.get('department')
                 required_test = request.POST.get('required_test')
-                test_obtained_marks = request.POST.get('test_obtained_marks')
-                test_total_marks = request.POST.get('test_total_marks')
+                test_obtained_marks = request.POST.get(
+                    'test_obtained_marks', 0)
+                test_total_marks = request.POST.get('test_total_marks', 1)
                 fees_slip = request.FILES.get('fees_slip')
 
                 # Check if the student has already applied for the same combination
@@ -125,57 +130,59 @@ def stdApplied(request):
                 admission_conditions = Admission.objects.filter(
                     university_name=university_name).first()
 
-                # Calculate the student's merit based on the formula defined in Admission model
-                # Replace this with your actual merit calculation formula
+                # Check if admission_conditions exist before accessing its attributes
+                if admission_conditions:
+                    intermediate_required_percentage = float(
+                        admission_conditions.intermediate_required_percentage)
+                    bachelor_required_percentage = float(
+                        admission_conditions.bachelor_required_percentage)
+                    test_required_percentage = float(
+                        admission_conditions.test_required_percentage)
 
-                # Fetch the required percentages from the Admission model and convert them to float
-                intermediate_required_percentage = float(
-                    admission_conditions.intermediate_required_percentage)
-                matric_required_percentage = float(
-                    admission_conditions.bachelor_required_percentage)
-                test_required_percentage = float(
-                    admission_conditions.test_required_percentage)
+                    # Convert the obtained marks to float
+                    inter_obtained_marks = float(
+                        student_info.inter_obtained_marks)
+                    matric_obtained_marks = float(
+                        student_info.matric_obtained_marks)
 
-                # Convert the obtained marks to float
-                inter_obtained_marks = float(student_info.inter_obtained_marks)
-                matric_obtained_marks = float(
-                    student_info.matric_obtained_marks)
+                    # Calculate the student's merit based on the formula defined in Admission model
+                    merit_percentage = (
+                        (inter_obtained_marks / student_info.inter_total_marks) * intermediate_required_percentage +
+                        (matric_obtained_marks / student_info.matric_total_marks) * bachelor_required_percentage +
+                        (float(test_obtained_marks) / float(test_total_marks)) *
+                        test_required_percentage
+                    )
 
-                # Calculate the student's merit based on the formula defined in Admission model
-                merit_percentage = (
-                    (inter_obtained_marks / student_info.inter_total_marks) * intermediate_required_percentage +
-                    (matric_obtained_marks / student_info.matric_total_marks) * matric_required_percentage +
-                    (float(test_obtained_marks) / float(test_total_marks)) *
-                    test_required_percentage
-                )
+                    # Save the form data into the table
+                    admission_form = AppliedForAdmissionForm.objects.create(
+                        university=university_name,
+                        campus=campus,
+                        program=program,
+                        department=department,
+                        required_test=required_test,
+                        test_obtained_marks=test_obtained_marks,
+                        test_total_marks=test_total_marks,
+                        fees_slip=fees_slip,
+                        std_email=email,
+                        student_info=student_info,  # Associate the application with student info
+                    )
+                    admission_form.save()
 
-                # Save the form data into the table
-                admission_form = AppliedForAdmissionForm.objects.create(
-                    university=university_name,
-                    campus=campus,
-                    program=program,
-                    department=department,
-                    required_test=required_test,
-                    test_obtained_marks=test_obtained_marks,
-                    test_total_marks=test_total_marks,
-                    fees_slip=fees_slip,
-                    std_email=email,
-                    student_info=student_info,  # Associate the application with student info
-                )
-                admission_form.save()
+                    # Save the calculated merit data in the StudentMeritData model
+                    student_merit_data = StudentMeritData(
+                        student_info=student_info,
+                        selected_university=university_name,
+                        campus=campus,
+                        department=department,
+                        merit_percentage=merit_percentage,
+                    )
+                    student_merit_data.save()
 
-                # Save the calculated merit data in the StudentMeritData model
-                student_merit_data = StudentMeritData(
-                    student_info=student_info,
-                    selected_university=university_name,
-                    campus=campus,
-                    department=department,
-                    merit_percentage=merit_percentage,
-                )
-                student_merit_data.save()
-
-                # Render the same page with a success message
-                return render(request, 'stdNewApplication.html', {'success_message': 'Your application was Submitted'})
+                    # Render the same page with a success message
+                    return render(request, 'stdNewApplication.html', {'success_message': 'Your application was Submitted'})
+                else:
+                    # Handle the case when admission_conditions is None
+                    return render(request, 'stdNewApplication.html', {'error_message': 'Admission conditions not found for the selected university.'})
 
             # Render the same page with an error message if the request method is not POST
             return render(request, 'stdNewApplication.html', {'error_message': 'Invalid request method'})
@@ -183,16 +190,13 @@ def stdApplied(request):
         except StdInfoTable.DoesNotExist:
             return render(request, 'stdNewApplication.html', {'error_message': 'Student information not found.'})
 
-        except Admission.DoesNotExist:
-            return render(request, 'stdNewApplication.html', {'error_message': 'University not found in admission conditions.'})
-
     else:
         return redirect('university_login/')
 
 
 def stdNewApplication(request):
     email = request.session.get('email')
-    cursor = conn.cursor()
+    cursor = connection.cursor()
     cursor.execute(
         "SELECT first_name FROM psapapp_stdinfotable WHERE email=%s", [email])
     stdName = cursor.fetchone()[0]
@@ -204,8 +208,35 @@ def stdNewApplication(request):
     admissions = Admission.objects.all()
 
     # Filter admissions based on the selected university, if available
+
+
+def stdNewApplication(request):
+    email = request.session.get('email')
+    cursor = connection.cursor()
+    cursor.execute(
+        "SELECT first_name FROM psapapp_stdinfotable WHERE email=%s", [email])
+    stdName = cursor.fetchone()[0]
+
+    # Get the selected university, campus, program, department, and admission test from the query parameters
+    selected_university = request.GET.get("university")
+    selected_campus = request.GET.get("campus")
+    selected_program = request.GET.get("program")
+    selected_department = request.GET.get("department")
+    selected_admission_test = request.GET.get("admission_test")
+
+    # Fetch all admissions data initially
+    admissions = Admission.objects.all()
+
+    # Filter admissions based on the selected university, if available
     if selected_university:
         admissions = admissions.filter(university_name=selected_university)
+
+    # Extract unique values for each dropdown
+    unique_campuses = set(admission.campus for admission in admissions)
+    unique_programs = set(admission.program for admission in admissions)
+    unique_departments = set(admission.departments for admission in admissions)
+    unique_admission_tests = set(
+        admission.admission_test for admission in admissions)
 
     admission_data = []
     for admission in admissions:
@@ -218,13 +249,23 @@ def stdNewApplication(request):
         }
         admission_data.append(data)
 
+    # Create the context dictionary
     context = {
         'admissions': admission_data,
         'stdName': stdName,
         'selected_university': selected_university,
+        'unique_universities': set(admission.university_name for admission in admissions),
+        'selected_campus': selected_campus,
+        'unique_campuses': unique_campuses,
+        'selected_program': selected_program,
+        'unique_programs': unique_programs,
+        'selected_department': selected_department,
+        'unique_departments': unique_departments,
+        'selected_admission_test': selected_admission_test,
+        'unique_admission_tests': unique_admission_tests,
     }
-    return render(request, 'stdNewApplication.html', context)
 
+    return render(request, 'stdNewApplication.html', context)
 
 def uniHome(request):
     if request.session.get('authenticated') == True:
@@ -362,67 +403,6 @@ def uniUpdateForm(request):
             return render(request, 'uniUpdateForm.html', {'university_data': university_data})
 
 
-# annouce button
-# def announce_admissions(request):
-#     if request.method == 'POST':
-#         session = request.POST.get('session')
-#         campus = request.POST.get('campus')
-#         program = request.POST.get('program')
-#         admission_test = request.POST.get('admission_test')
-#         no_of_shortlisted_students = request.POST.get(
-#             'no_of_shortlisted_students')
-#         intermediate_required_percentage = request.POST.get(
-#             'intermedaite_required_percentage')
-#         bachelor_required_percentage = request.POST.get(
-#             'bachelor_required_percentage')
-#         test_required_percentage = request.POST.get(
-#             'Test_required_percentage_percentage')
-#         departments_list = request.POST.getlist('department')
-#         start_date = request.POST.get('start_date')
-#         end_date = request.POST.get('end_date')
-#         email = request.session.get('email')
-#         cursor = conn.cursor()
-#         cursor.execute(
-#             "SELECT university_name FROM psapapp_uniinfotable WHERE email=%s", [email])
-#         uniName = cursor.fetchone()[0]
-
-
-#         # Join the list of department names into a comma-separated string
-#         departments = ', '.join(departments_list)
-
-#         admission = Admission(
-#             session=session,
-#             campus=campus,
-#             program=program,
-#             admission_test=admission_test,
-#             no_of_shortlisted_students=no_of_shortlisted_students,
-#             intermediate_required_percentage=intermediate_required_percentage,
-#             bachelor_required_percentage=bachelor_required_percentage,
-#             test_required_percentage=test_required_percentage,
-#             start_date=start_date,
-#             end_date=end_date,
-#             departments=departments,
-#             university_name=uniName,
-#         )
-#         admission.save()
-
-#         admissions = Admission.objects.filter(university_name=uniName)
-
-#         # Query and count the number of students applied for each admission
-#         for admission in admissions:
-#             admission.students_applied = StudentMeritData.objects.filter(
-#                 selected_university=uniName, department=admission.departments).count()
-
-#         context = {
-#             'admissions': admissions,
-#             'uniName': uniName,
-#         }
-
-#         return render(request, 'uniHome.html', context)
-
-#     return render(request, 'uniHome.html', {'uniName': uniName})
-
-
 def announce_admissions(request):
     if request.method == 'POST':
         session = request.POST.get('session')
@@ -432,52 +412,73 @@ def announce_admissions(request):
         no_of_shortlisted_students = request.POST.get(
             'no_of_shortlisted_students')
         intermediate_required_percentage = request.POST.get(
-            'intermedaite_required_percentage')
+            'intermediate_required_percentage')
         bachelor_required_percentage = request.POST.get(
             'bachelor_required_percentage')
         test_required_percentage = request.POST.get(
-            'Test_required_percentage_percentage')
+            'test_required_percentage')
         departments_list = request.POST.getlist('department')
         start_date = request.POST.get('start_date')
         end_date = request.POST.get('end_date')
         email = request.session.get('email')
+
+        account_number = request.POST.get('account_number')
+        application_fees = request.POST.get('application_fees')
+        bank_name = request.POST.get('bank_name')
+        account_title = request.POST.get('account_title')
+        other_requirements = request.POST.get('other_requirements')
+
         cursor = conn.cursor()
         cursor.execute(
             "SELECT university_name FROM psapapp_uniinfotable WHERE email=%s", [email])
         uniName = cursor.fetchone()[0]
 
-        # Check if there is already an ongoing admission for the same session
-        existing_admission = Admission.objects.filter(
+        # Check if there is already an ongoing admission for the same session and department
+        existing_admissions = Admission.objects.filter(
             university_name=uniName,
             session=session,
             start_date__lte=end_date,
             end_date__gte=start_date,
+            departments__in=departments_list,
         ).exists()
 
-        if existing_admission:
+        if existing_admissions:
             messages.error(
-                request, "Admission for this session is already ongoing.")
+                request, f"Admission for {department} department in {session} session is already ongoing.")
             # Adjust the URL name to your view
             return redirect('uniNewAdmissions')
 
-        # Join the list of department names into a comma-separated string
-        departments = ', '.join(departments_list)
+        # Iterate through selected departments and create separate admission for each
+        for department in departments_list:
+            try:
+                with transaction.atomic():
+                    admission = Admission(
+                        session=session,
+                        campus=campus,
+                        program=program,
+                        admission_test=admission_test,
+                        no_of_shortlisted_students=no_of_shortlisted_students,
+                        intermediate_required_percentage=intermediate_required_percentage,
+                        bachelor_required_percentage=bachelor_required_percentage,
+                        test_required_percentage=test_required_percentage,
+                        start_date=start_date,
+                        end_date=end_date,
+                        departments=department,
+                        university_name=uniName,
+                        account_number=account_number,
+                        application_fees=application_fees,
+                        bank_name=bank_name,
+                        account_title=account_title,
+                        other_requirements=other_requirements,
+                    )
+                    admission.save()
 
-        admission = Admission(
-            session=session,
-            campus=campus,
-            program=program,
-            admission_test=admission_test,
-            no_of_shortlisted_students=no_of_shortlisted_students,
-            intermediate_required_percentage=intermediate_required_percentage,
-            bachelor_required_percentage=bachelor_required_percentage,
-            test_required_percentage=test_required_percentage,
-            start_date=start_date,
-            end_date=end_date,
-            departments=departments,
-            university_name=uniName,
-        )
-        admission.save()
+            except IntegrityError as e:
+                # Handle the case when an admission already exists for the same session and department
+                messages.error(
+                    request, f"e")
+                # Adjust the URL name to your view
+                return redirect('uniNewAdmissions')
 
         admissions = Admission.objects.filter(university_name=uniName)
 
@@ -494,7 +495,6 @@ def announce_admissions(request):
         return render(request, 'uniHome.html', context)
 
     return render(request, 'uniHome.html', {'uniName': uniName})
-
 
 from django.shortcuts import render, redirect
 from django.contrib import messages
@@ -792,7 +792,8 @@ def download_merit_list(request, university_name, department, start_date):
         Admission, university_name=university_name, departments=department, start_date=start_date)
 
     # Query the StudentMeritData model to filter by university and department
-    merit_list = StudentMeritData.objects.filter(selected_university=university_name, department=department).order_by('-merit_percentage')
+    merit_list = StudentMeritData.objects.filter(
+        selected_university=university_name, department=department).order_by('-merit_percentage')
 
     if not merit_list:
         messages.error(
@@ -837,17 +838,31 @@ def download_merit_list(request, university_name, department, start_date):
     )
 
     # Define data for the table
-    table_data = [['CNIC', 'Student Name', 'Intermediate Marks', 'Matric Marks', 'Test Marks', 'Merit Percentage']]
+    table_header = ['CNIC', 'Student Name',
+                    'Intermediate Marks', 'Matric Marks', 'Merit Percentage']
+    table_data = []
+
+    # Check if any test marks are non-zero
+    include_test_marks = any(test_marks_dict.values())
+    if include_test_marks:
+        # If at least one test mark is non-zero, include the "Test Marks" column in the header
+        table_header.insert(4, 'Test Marks')
 
     for entry in merit_list:
         student_info = entry.student_info  # This gets the related StdInfoTable object
-        test_marks = test_marks_dict.get(student_info.email, "N/A")
+        test_marks = test_marks_dict.get(student_info.email, 0)
 
-        table_data.append([student_info.cnic, student_info.first_name + " " + student_info.last_name,
-                           student_info.inter_obtained_marks, student_info.matric_obtained_marks, test_marks, entry.merit_percentage])
+        row = [student_info.cnic, student_info.first_name + " " + student_info.last_name,
+               student_info.inter_obtained_marks, student_info.matric_obtained_marks, entry.merit_percentage]
+
+        # Include the test marks if any are non-zero
+        if include_test_marks:
+            row.insert(4, test_marks)
+
+        table_data.append(row)
 
     # Create the table
-    table = Table(table_data)
+    table = Table([table_header] + table_data)
     table_style = TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
@@ -859,10 +874,14 @@ def download_merit_list(request, university_name, department, start_date):
     ])
     table.setStyle(table_style)
 
+    unique_campuses = list(set([entry.campus for entry in merit_list]))
+
     # Build the PDF document
     story = []
-    title = Paragraph('Merit List', title_style)
-    subtitle = Paragraph(f'University: {university_name}, Department: {department}', subtitle_style)
+    title_text = f'Merit List ({", ".join(unique_campuses)})'
+    title = Paragraph(title_text, title_style)
+    subtitle = Paragraph(
+        f'{university_name}, Department of {department}', subtitle_style)
     spacer = Spacer(1, 12)
     story.extend([title, subtitle, spacer, table])
 
@@ -874,9 +893,6 @@ def download_merit_list(request, university_name, department, start_date):
     buffer.close()
 
     return response
-
-
-
 
 # views.py
 from django.shortcuts import render, redirect
@@ -918,3 +934,97 @@ def close_admission(request, admission_id):
 
     # Redirect back to the dashboard or another appropriate page
     return redirect('uniHome')  # Assuming you have a URL name 'dashboard'
+
+
+# ajax
+# views.py
+# views.py
+
+
+def get_campuses(request):
+    university = request.GET.get('university')
+    if university:
+        campuses_and_sessions = Admission.objects.filter(
+            university_name=university
+        ).values_list('campus', 'session').distinct()
+
+        # Format the data as (Campus, Session) tuples
+        campuses = [f"{session} {campus}" for campus,
+                    session in campuses_and_sessions]
+
+        return JsonResponse({'campuses': campuses})
+    return JsonResponse({'campuses': []})
+
+
+def get_programs(request):
+    university = request.GET.get('university')
+    if university:
+        programs = Admission.objects.filter(
+            university_name=university).values_list('program', flat=True).distinct()
+        programs = list(programs)
+        return JsonResponse({'programs': programs})
+    return JsonResponse({'programs': []})
+
+
+def get_departments(request):
+    university = request.GET.get('university')
+    program = request.GET.get('program')
+    if university and program:
+        departments = Admission.objects.filter(
+            university_name=university, program=program).values_list('departments', flat=True).distinct()
+        departments = list(departments)
+        return JsonResponse({'departments': departments})
+    return JsonResponse({'departments': []})
+
+
+def get_test_required(request):
+    university = request.GET.get('university')
+    program = request.GET.get('program')
+    department = request.GET.get('department')
+
+    if university and program and department:
+        test_required = Admission.objects.filter(
+            university_name=university,
+            program=program,
+            departments=department  # Use the correct field name
+        ).values_list('admission_test', flat=True).distinct()
+
+        test_required = list(test_required)
+        return JsonResponse({'test_required': test_required})
+
+    return JsonResponse({'test_required': []})
+
+
+def get_department_details(request):
+    university = request.GET.get('university')
+    program = request.GET.get('program')
+    department = request.GET.get('department')
+
+    if university and program and department:
+        admission_data = Admission.objects.filter(
+            university_name=university,
+            program=program,
+            departments=department
+        ).first()
+
+        if admission_data:
+            department_details = {
+                'account_number': admission_data.account_number,
+                'application_fees': admission_data.application_fees,
+                'bank_name': admission_data.bank_name,
+                'account_title': admission_data.account_title,
+                'other_requirements': admission_data.other_requirements,
+            }
+            return JsonResponse(department_details)
+
+    return JsonResponse({})
+
+# ongoing admission
+
+
+def ongoing_admissions(request):
+    ongoing_admissions = Admission.objects.filter(is_closed=False)
+    context = {
+        'ongoing_admissions': ongoing_admissions,
+    }
+    return render(request, 'ongoing_admissions.html', context)

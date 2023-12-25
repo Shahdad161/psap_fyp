@@ -1,250 +1,650 @@
-{% load static %}
+                {% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Apply for Admissions</title>
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <title>Apply for Admissions</title>
+                    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 
-    <!-- jQuery library -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+                    <!-- jQuery library -->
+                    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
-    <!-- Latest compiled JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+                    <!-- Latest compiled JavaScript -->
+                    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+                    <!-- Latest compiled and minified CSS -->
+                    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-</head>
-<style>
-    .main {
-        background-image: url({% static "img/bg_students.bbae6663.jpg" %});
-    }
-    * {
-        font-size: large;
-        color: #961e64;
-    }
-    .form-control {
-        height: auto !important;
-    }
-    .input-group-addon,
-    .input-group-btn {
-        width: auto !important;
-    }
-</style>
+                    <!-- jQuery library -->
+                    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
-<body class="main p-4">
-<div class="container">
-    <form class="well form-horizontal" action="/stdApplied/" method="post" id="contact_form">
-        {% csrf_token %}
-        <fieldset>
-            <!-- Form Name -->
-            <legend>
-                <button class="btn btn-lg btn-danger">
-                    <a href="{% url 'stdHome' %}">Back</a>
-                </button>
-                {% if error_message %}
-                <div class="alert text-center alert-danger" role="alert">
-                    <p>{{ error_message }}</p>
-                </div>
-                {% endif %}
-                {% if success_message %}
-                <div class="alert alert-success text-center" role="alert">
-                    <h2><strong>Success!</strong></h2>
-                    <p>{{ success_message }}</p>
-                </div>
-                {% endif %}
-                <h3 class="text-right">{{ stdName }}<h3>    
-                <div>
-                    <h1 class="text-center">
-                        <b>Apply for Admission</b>
-                    </h1>
-                </div>
-            </legend>
+                    <!-- Latest compiled JavaScript -->
+                    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+                    <!-- Required meta tags -->
+                    <meta charset="utf-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-            <!-- Select University -->
-            <div class="form-group">
-                <label class="col-md-4 control-label">Select University</label>
-                <div class="col-md-4 selectContainer">
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
-                        <select name="university" class="form-control selectpicker" id="university-select">
-                            <option value="">-- Select University --</option>
-                            {% for admission in admissions %}
-                                <option value="{{ admission.university_name }}" {% if admission.university_name == selected_university %}selected{% endif %}>{{ admission.university_name }}</option>
-                            {% endfor %}
-                        </select>
+                    <!-- Bootstrap CSS -->
+                    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+                </head>
+                <style>
+                    .main {
+                        background-image: url({% static "img/bg_students.bbae6663.jpg" %});
+                    }
+                    * {
+                        font-size: large;
+                        color: #961e64;
+                    }
+                    .form-control {
+                        height: auto !important;
+                    }
+                    .input-group-addon,
+                    .input-group-btn {
+                        width: auto !important;
+                    }
+                </style>
+
+                <body class="main p-4">
+                <div class="container">
+                    <form class="well form-horizontal" action="/stdApplied/" method="post" id="contact_form">
+                        {% csrf_token %}
+                        <fieldset>
+                            <!-- Form Name -->
+                            <legend>
+                                <button class="btn btn-lg btn-danger">
+                                    <a href="{% url 'stdHome' %}">Back</a>
+                                    
+                                </button>
+                                <div class="text-center" role="alert">
+                                        <p>Please, check <a href="{% url 'ongoing_admissions' %}" >requirements and ongoing admissions</a> before applying</p>
+                                </div>
+
+                                {% if error_message %}
+                                <div class="alert text-center alert-danger" role="alert">
+                                    <p>{{ error_message }}</p>
+                                </div>
+                                {% endif %}
+                                {% if success_message %}
+                                <div class="alert alert-success text-center" role="alert">
+                                    <h2><strong>Success!</strong></h2>
+                                    <p>{{ success_message }}</p>
+                                </div>
+                                {% endif %}
+                                <h3 class="text-right">{{ stdName }}<h3>    
+                                <div>
+                                    <h1 class="text-center">
+                                        <b>Apply for Admission</b>
+                                    </h1>
+                                </div>
+                            </legend>
+                <!-- Select University -->
+                <div class="form-group">
+                    <label class="col-md-4 control-label">Select University</label>
+                    <div class="col-md-4 selectContainer">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
+                            <select name="university" class="form-control selectpicker" id="university-select">
+                                <option value="">-- Select University --</option>
+                                {% for university in unique_universities %}
+                                    <option value="{{ university }}" {% if university == selected_university %}selected{% endif %}>{{ university }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!--Campus-->
-            <div class="form-group">
-                <label class="col-md-4 control-label">Select Campus</label>
-                <div class="col-md-4 selectContainer">
-                    <div class="input-group">
-                        <span class="input-group-addon"
-                            ><i class="glyphicon glyphicon-list"></i
-                        ></span>
-                        <select name="campus" class="form-control selectpicker">
-                            <option value="">-- Select campus --</option>
-                            {% for admission in admissions %}
-                            <option value="{{ admission.campus }}">{{ admission.campus }}</option>
-                            {% endfor %}
-                        </select>
+                <!-- Campus dropdown -->
+                <div class="form-group">
+                    <label class="col-md-4 control-label">Year</label>
+                    <div class="col-md-4 selectContainer">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
+                            <select name="campus" class="form-control selectpicker" id="campus-select">
+                                <option value="">-- Admission Year --</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!--Program-->
-            <div class="form-group">
-                <label class="col-md-4 control-label">Choose Program</label>
-                <div class="col-md-4 selectContainer">
-                    <div class="input-group">
-                        <span class="input-group-addon"
-                            ><i class="glyphicon glyphicon-list"></i
-                        ></span>
-                        <select name="program" class="form-control selectpicker">
-                            <option value="">-- Select Program --</option>
 
-                            {% for admission in admissions %}
-                            <option value="{{ admission.program }}">{{ admission.program }}</option>
-                            {% endfor %}
-                        </select>
+                <!-- Program dropdown -->
+                <div class="form-group">
+                    <label class="col-md-4 control-label">Choose Program</label>
+                    <div class="col-md-4 selectContainer">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
+                            <select name="program" class="form-control selectpicker" id="program-select">
+                                <option value="">-- Select Program --</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Department-->
-            <div class="form-group">
-                <label class="col-md-4 control-label">Department</label>
-                <div class="col-md-4 selectContainer">
-                    <div class="input-group">
-                        <span class="input-group-addon"
-                            ><i class="glyphicon glyphicon-list"></i
-                        ></span>
-                        <select name="department" class="form-control selectpicker">
-                            <option value="">-- Select Department --</option>
-                            {% for admission in admissions %}
-                            <option value="{{ admission.department }}">{{ admission.department }}</option>
-                            {% endfor %}
-                            <!-- Add options for departments here -->
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <!-- Admission test -->
-            <div class="form-group">
-                <label class="col-md-4 control-label">Required Admission test</label>
-                <div class="col-md-4 selectContainer">
-                    <div class="input-group">
-                        <span class="input-group-addon"
-                            ><i class="glyphicon glyphicon-list"></i
-                        ></span>
-                        <select name="required_test" class="form-control selectpicker">
-                            <option value="">-- Select Test type --</option>
 
-                            {% for admission in admissions %}
-                            <option value="{{ admission.admission_test }}">{{ admission.admission_test }}</option>
-                            {% endfor %}
-                        </select>
+                <!-- Department dropdown -->
+                <div class="form-group">
+                    <label class="col-md-4 control-label">Department</label>
+                    <div class="col-md-4 selectContainer">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
+                            <select name="department" class="form-control selectpicker" id="department-select">
+                                <option value="">-- Select Department --</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <!-- TEST obtained SCORE -->
-            <div class="form-group">
-                <label class="col-md-4 control-label">Obtained marks</label>
-                <div class="col-md-4 inputGroupContainer">
-                    <div class="input-group">
-                        <span class="input-group-addon"
-                            ><i class="glyphicon glyphicon-education"></i
-                        ></span>
-                        <input
-                            name="test_obtained_marks"
-                            placeholder="1-100"
-                            class="form-control"
-                            type="number"
-                            
-                        />
-                    </div>
-                </div>
-            </div>
-            <!-- TEST TOTAL SCORE -->
-            <div class="form-group">
-                <label class="col-md-4 control-label">Total marks</label>
-                <div class="col-md-4 inputGroupContainer">
-                    <div class="input-group">
-                        <span class="input-group-addon"
-                            ><i class="glyphicon glyphicon-education"></i
-                        ></span>
-                        <input
-                            name="test_total_marks"
-                            placeholder="0-100"
-                            class="form-control"
-                            type="number"
-                            
-                            
-                        />
-                    </div>
-                </div>
-            </div>
 
-            <!-- Fee slip photo -->
-            <div class="form-group">
-                <label class="col-md-4 control-label">Deposit Fee Slip</label>
-                <div class="col-md-4 inputGroupContainer">
-                    <div class="input-group">
-                        <span class="input-group-addon"
-                            ><i class="glyphicon glyphicon-education"></i
-                        ></span>
-                        <input
-                            name="fees_slip"
-                            placeholder="xyz"
-                            class="form-control"
-                            type="file"
-                        />
-                        Please Pay a fees of 1000Pkr on name of this university.Bank
-                        HBL. Account no: HBL123543445435
+
+
+
+                <!-- Admission test dropdown -->
+                <div class="form-group">
+                    <label class="col-md-4 control-label">Required Admission Test</label>
+                    <div class="col-md-4 selectContainer">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
+                            <select name="admission_test" class="form-control selectpicker" id="test-required-select">
+                                <option value="">-- Select Test Required --</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <br />
-            <hr />
 
-            <!-- Button -->
-            <div class="form-group">
-                <label class="col-md-4 control-label"></label>
-                <div class="col-md-4 text-center">
-                    <button type="submit" class="btn btn-lg btn-warning">Submit</button>
+                            <!-- TEST obtained SCORE -->
+                            <div class="form-group">
+                                <label class="col-md-4 control-label">Obtained marks</label>
+                                <div class="col-md-4 inputGroupContainer">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"
+                                            ><i class="glyphicon glyphicon-education"></i
+                                        ></span>
+                                        <input
+                                            name="test_obtained_marks"
+                                            placeholder="1-100"
+                                            class="form-control"
+                                            type="number"
+                                            
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- TEST TOTAL SCORE -->
+                            <div class="form-group">
+                                <label class="col-md-4 control-label">Total marks</label>
+                                <div class="col-md-4 inputGroupContainer">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"
+                                            ><i class="glyphicon glyphicon-education"></i
+                                        ></span>
+                                        <input
+                                            name="test_total_marks"
+                                            placeholder="0-100"
+                                            class="form-control"
+                                            type="number"
+                                            
+                                            
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- New input field for account number -->
+                {% comment %} <div class="form-group">
+                    <label class="col-md-4 control-label">Account Number</label>
+                    <div class="col-md-4 inputGroupContainer">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-education"></i></span>
+                            <input
+                                name="account_number"
+                                class="form-control"
+                                type="text"
+                                readonly
+                            />
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </fieldset>
-    </form>
+
+                <!-- New input field for application fees -->
+                <div class="form-group">
+                    <label class="col-md-4 control-label">Application Fees</label>
+                    <div class="col-md-4 inputGroupContainer">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-education"></i></span>
+                            <input
+                                name="application_fees"
+                                class="form-control"
+                                type="text"
+                                readonly
+                                
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- New input field for bank name -->
+                <div class="form-group">
+                    <label class="col-md-4 control-label">Bank Name</label>
+                    <div class="col-md-4 inputGroupContainer">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-education"></i></span>
+                            <input
+                                name="bank_name"
+                                class="form-control"
+                                type="text"
+                                readonly
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- New input field for account title -->
+                <div class="form-group">
+                    <label class="col-md-4 control-label">Account Title</label>
+                    <div class="col-md-4 inputGroupContainer">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-education"></i></span>
+                            <input
+                                name="account_title"
+                                class="form-control"
+                                type="text"
+                                readonly
+                            />
+                        </div>
+                    </div>
+                </div> {% endcomment %}
+
+<!-- New input field for other requirements -->
+<div class="form-group">
+    <label id="other_requirementsLabel" class="col-md-4 control-label"></label>
+    <div class="col-md-4 inputGroupContainer">
+        <div class="input-group">
+            <span class="input-group-addon"><i class="glyphicon glyphicon-education"></i></span>
+            <input
+                name="other_requirements"
+                class="form-control"
+                type="text"
+            
+            />
+        </div>
+        <!-- Place the label text within the p tag -->
+        <p id="other_requirementsLabel" class="col-md-4 control-label"></p>
+    </div>
 </div>
-<script>
-    $(document).ready(function () {
-        // Listen for change event on the university select
-        $("#university-select").change(function () {
-            // Get the selected university value
-            var selectedUniversity = $(this).val();
 
-            // Reload the page with a query parameter for the selected university
-            window.location.href = window.location.pathname + "?university=" + selectedUniversity;
+
+
+                            <!-- Fee slip photo -->
+                            <div class="form-group">
+                                <label class="col-md-4 control-label">Deposit Fee Slip</label>
+                                <div class="col-md-4 inputGroupContainer">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"
+                                            ><i class="glyphicon glyphicon-education"></i
+                                        ></span>
+                                        <input
+                                            name="fees_slip"
+                                            placeholder="xyz"
+                                            class="form-control"
+                                            type="file"
+                                        />
+                                        <div id="fee-slip-info">
+                                            {% comment %} Choose Department to view Application fees.
+                                            <br>
+                                            Application Fees: {{ application_fees }} PKR
+                                            <br>
+                                            Account Title: {{ university_name }}
+                                            <br>
+                                            Account Number: {{ account_number }}
+                                            <br>
+                                            Bank Name: {{ bank_name }} {% endcomment %}
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <hr />
+
+                            <!-- Button -->
+                            <div class="form-group">
+                                <label class="col-md-4 control-label"></label>
+                                <div class="col-md-4 text-center">
+                                    <button type="submit" class="btn btn-lg btn-warning">Submit</button>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+
+
+
+                {% comment %} 
+                <script>
+                    $(document).ready(function () {
+                        function populateDropdown(selectId, data, defaultText) {
+                            var select = $('#' + selectId);
+                            select.empty();
+
+                            select.append($('<option>', {
+                                value: '',
+                                text: defaultText
+                            }));
+
+                            var uniqueNames = [];
+                            $.each(data, function (index, item) {
+                                if ($.inArray(item, uniqueNames) === -1) {
+                                    uniqueNames.push(item);
+                                    select.append($('<option>', {
+                                        value: item,
+                                        text: item
+                                    }));
+                                }
+                            });
+                        }
+
+                        function populateCampusDropdown(selectedUniversity) {
+                            var params = { 'university': selectedUniversity };
+
+                            $.ajax({
+                                url: '/get_campuses/',
+                                data: params,
+                                dataType: 'json',
+                                success: function (data) {
+                                    populateDropdown('campus-select', data.campuses, '-- Select Year --');
+                                    // Trigger change event after populating to update dependent dropdowns
+                                    $("#campus-select").change();
+                                },
+                                error: function (error) {
+                                    // Handle error if needed
+                                }
+                            });
+                        }
+
+                        function populateProgramDropdown(selectedUniversity, selectedCampus) {
+                            var params = { 'university': selectedUniversity, 'campus': selectedCampus };
+
+                            $.ajax({
+                                url: '/get_programs/',
+                                data: params,
+                                dataType: 'json',
+                                success: function (data) {
+                                    populateDropdown('program-select', data.programs, '-- Select Program --');
+                                    // Trigger change event after populating to update dependent dropdowns
+                                    $("#program-select").change();
+                                },
+                                error: function (error) {
+                                    // Handle error if needed
+                                }
+                            });
+                        }
+
+                        function populateDepartmentDropdown(selectedUniversity, selectedProgram) {
+                            var params = { 'university': selectedUniversity, 'program': selectedProgram };
+
+                            $.ajax({
+                                url: '/get_departments/',
+                                data: params,
+                                dataType: 'json',
+                                success: function (data) {
+                                    populateDropdown('department-select', data.departments, '-- Select Department --');
+                                    // Trigger change event after populating to update dependent dropdowns
+                                    $("#department-select").change();
+                                },
+                                error: function (error) {
+                                    // Handle error if needed
+                                }
+                            });
+                        }
+
+                        function populateTestRequiredDropdown(selectedUniversity, selectedProgram, selectedDepartment) {
+                            var params = { 'university': selectedUniversity, 'program': selectedProgram, 'department': selectedDepartment };
+
+                            $.ajax({
+                                url: '/get_test_required/',
+                                data: params,
+                                dataType: 'json',
+                                success: function (data) {
+                                    populateDropdown('test-required-select', data.test_required, '-- Select Test Required --');
+                                },
+                                error: function (error) {
+                                    // Handle error if needed
+                                }
+                            });
+                        }
+
+                        $("#university-select").change(function () {
+                            var selectedUniversity = $(this).val();
+                            populateCampusDropdown(selectedUniversity);
+                        });
+
+                        $("#campus-select").change(function () {
+                            var selectedUniversity = $('#university-select').val();
+                            var selectedCampus = $(this).val();
+                            populateProgramDropdown(selectedUniversity, selectedCampus);
+                        });
+
+                        $("#program-select").change(function () {
+                            var selectedUniversity = $('#university-select').val();
+                            var selectedProgram = $(this).val();
+                            populateDepartmentDropdown(selectedUniversity, selectedProgram);
+                        });
+
+                        $("#department-select").change(function () {
+                            var selectedUniversity = $('#university-select').val();
+                            var selectedProgram = $('#program-select').val();
+                            var selectedDepartment = $(this).val();
+                            populateTestRequiredDropdown(selectedUniversity, selectedProgram, selectedDepartment);
+                        });
+                    });
+                </script> {% endcomment %}
+
+
+                <script>
+                    $(document).ready(function () {
+                        function populateDropdown(selectId, data, defaultText) {
+                            var select = $('#' + selectId);
+                            select.empty();
+
+                            select.append($('<option>', {
+                                value: '',
+                                text: defaultText
+                            }));
+
+                            var uniqueNames = [];
+                            $.each(data, function (index, item) {
+                                if ($.inArray(item, uniqueNames) === -1) {
+                                    uniqueNames.push(item);
+                                    select.append($('<option>', {
+                                        value: item,
+                                        text: item
+                                    }));
+                                }
+                            });
+                        }
+
+                        function resetDropdowns(dropdownIds) {
+                            for (var i = 0; i < dropdownIds.length; i++) {
+                                $('#' + dropdownIds[i]).empty().append($('<option>', { value: '', text: '-- Select --' }));
+                            }
+                        }
+
+                        function populateCampusDropdown(selectedUniversity) {
+                            resetDropdowns(['program-select', 'department-select', 'test-required-select']);
+
+                            var params = { 'university': selectedUniversity };
+
+                            $.ajax({
+                                url: '/get_campuses/',
+                                data: params,
+                                dataType: 'json',
+                                success: function (data) {
+                                    populateDropdown('campus-select', data.campuses, '-- Admission Year --');
+                                },
+                                error: function (error) {
+                                    // Handle error if needed
+                                }
+                            });
+                        }
+
+                        function populateProgramDropdown(selectedUniversity, selectedCampus) {
+                            resetDropdowns(['department-select', 'test-required-select']);
+
+                            var params = { 'university': selectedUniversity, 'campus': selectedCampus };
+
+                            $.ajax({
+                                url: '/get_programs/',
+                                data: params,
+                                dataType: 'json',
+                                success: function (data) {
+                                    populateDropdown('program-select', data.programs, '-- Select Program --');
+                                },
+                                error: function (error) {
+                                    // Handle error if needed
+                                }
+                            });
+                        }
+
+                        function populateDepartmentDropdown(selectedUniversity, selectedProgram) {
+                            resetDropdowns(['test-required-select']);
+
+                            var params = { 'university': selectedUniversity, 'program': selectedProgram };
+
+                            $.ajax({
+                                url: '/get_departments/',
+                                data: params,
+                                dataType: 'json',
+                                success: function (data) {
+                                    populateDropdown('department-select', data.departments, '-- Select Department --');
+                                },
+                                error: function (error) {
+                                    // Handle error if needed
+                                }
+                            });
+                        }
+                function populateTestRequiredDropdown(selectedUniversity, selectedProgram, selectedDepartment) {
+                    var params = {
+                        'university': selectedUniversity,
+                        'program': selectedProgram,
+                        'department': selectedDepartment
+                    };
+
+                    $.ajax({
+                        url: '/get_test_required/',
+                        data: params,
+                        dataType: 'json',
+                        success: function (data) {
+                            var testRequiredSelect = $('#test-required-select');
+                            populateDropdown('test-required-select', data.test_required, '-- Select Test Required --');
+                            
+                            
+                            // Automatically select the first option and make it uneditable
+                            testRequiredSelect.val(data.test_required[0]);
+                            
+                            testRequiredSelect.prop('disabled', true);
+                            if (data.test_required[0] === 'Not required') {
+                                // Set default values and make the fields uneditable
+                                $("input[name='test_obtained_marks']").val(0).prop('readonly', true);
+                                $("input[name='test_total_marks']").val(1).prop('readonly', true);
+                            } else {
+                                // Reset values and make the fields editable
+                                $("input[name='test_obtained_marks']").val().prop('readonly', false);
+                                $("input[name='test_total_marks']").val().prop('readonly', false);
+                            }
+                            
+                        },
+                        error: function (error) {
+                            // Handle error if needed
+                        }
+                    });
+                }
+
+
+               function populateDepartmentDetails(selectedUniversity, selectedProgram, selectedDepartment) {
+        var params = {
+            'university': selectedUniversity,
+            'program': selectedProgram,
+            'department': selectedDepartment
+        };
+
+        $.ajax({
+            url: '/get_department_details/',
+            data: params,
+            dataType: 'json',
+            success: function (data) {
+                // Update the fields with the received data
+                $("input[name='account_number']").val(data.account_number);
+                $("input[name='application_fees']").val(data.application_fees);
+                $("input[name='bank_name']").val(data.bank_name);
+                $("input[name='account_title']").val(data.account_title);
+               
+
+                var other_requirementsLabel=data.other_requirements;
+                $('#other_requirementsLabel').text(other_requirementsLabel)
+                // Update the fee slip information dynamically
+                var feeSlipInfo = `
+                    Pay application fee: ${data.application_fees} PKR\n. 
+                    Account Number: ${data.account_number}\n.
+                    On behalf of: ${data.account_title}\n.
+                    Bank Name: ${data.bank_name}
+                `;
+
+
+                $('#fee-slip-info').text(feeSlipInfo);
+            },
+            error: function (error) {
+                // Handle error if needed
+            }
         });
-    });
-</script>
-
-<!-- Rest of your HTML template remains unchanged -->
-
-<!-- Optional JavaScript -->
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="{% static 'js/jquery-3.3.1.slim.min.js' %}" crossorigin="anonymous"></script>
-<script src="{% static 'js/popper.min.js' %}" crossorigin="anonymous"></script>
-<script src="{% static 'js/bootstrap.min.js' %}" crossorigin="anonymous"></script>
+    }
+                $("#department-select").change(function () {
+                    var selectedUniversity = $('#university-select').val();
+                    var selectedProgram = $('#program-select').val();
+                    var selectedDepartment = $(this).val();
+                    populateDepartmentDetails(selectedUniversity, selectedProgram, selectedDepartment);
+                });
 
 
-</body>
-</html>
+                        $("#university-select").change(function () {
+                            var selectedUniversity = $(this).val();
+                            populateCampusDropdown(selectedUniversity);
+                        });
+
+                        $("#campus-select").change(function () {
+                            var selectedUniversity = $('#university-select').val();
+                            var selectedCampus = $(this).val();
+                            populateProgramDropdown(selectedUniversity, selectedCampus);
+                        });
+
+                        $("#program-select").change(function () {
+                            var selectedUniversity = $('#university-select').val();
+                            var selectedProgram = $(this).val();
+                            populateDepartmentDropdown(selectedUniversity, selectedProgram);
+                        });
+
+                        $("#department-select").change(function () {
+                            var selectedUniversity = $('#university-select').val();
+                            var selectedProgram = $('#program-select').val();
+                            var selectedDepartment = $(this).val();
+                            populateTestRequiredDropdown(selectedUniversity, selectedProgram, selectedDepartment);
+                        });
+
+                    // Update the admission_test input field when test-required-select changes
+                    $("#test-required-select").change(function () {
+                        var selectedTest = $(this).val();
+                        $("input[name='admission_test']").val(selectedTest);
+                    });
+                    });
+                    
+                </script>
+
+
+                <!-- Rest of your HTML template remains unchanged -->
+
+                <!-- Optional JavaScript -->
+                <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+                <script src="{% static 'js/jquery-3.3.1.slim.min.js' %}" crossorigin="anonymous"></script>
+                <script src="{% static 'js/popper.min.js' %}" crossorigin="anonymous"></script>
+                <script src="{% static 'js/bootstrap.min.js' %}" crossorigin="anonymous"></script>
+
+
+                </body>
+                </html>

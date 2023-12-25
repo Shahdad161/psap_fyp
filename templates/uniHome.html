@@ -11,6 +11,9 @@
     body {
       color: #961e64;
     }
+    a{
+        color: white;
+    }
     .main {
       background-image: url("{% static 'img/bg_students.bbae6663.jpg' %}");
       background-size: cover;
@@ -53,7 +56,7 @@
     <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbgcolor ">
     <div class="container text-white">
-      <a class="navbar-brand" href="#">Dashboard</a>
+      <a class="navbar-brand" href="#">{{ uniName }}</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -71,11 +74,11 @@
   </nav>
   <div class="main p-5">
     <div class="container inner-main">
-      <h2 class="text-center">{{ uniName }} Dashboard</h2>
+      <h2 class="text-center">{{ uniName }}'s Dashboard</h2>
 
       <div class="row mt-4">
         <div class="col-6">
-          <h1>On-going Admissions</h1>
+          <h3>On-going Admissions</h3>
         </div>
         <div class="col-6 text-right">
           <a href="{% url 'uniNewAdmissions' %}" class="btn btn-danger">New Admissions</a>
@@ -85,8 +88,8 @@
         <table class="table table-hover table-striped">
           <thead>
             <tr>
-              <th>Campus</th>
               <th>Session</th>
+              <th>Department</th>
               <th>Program</th>
               <th>Start Date</th>
               <th>End Date</th>
@@ -96,9 +99,8 @@
           <tbody>
             {% for admission in admissions %}
             <tr>
-              <td>{{ admission.campus }}</td>
               <td>{{ admission.session }} {{ admission.start_date|date:"Y" }}</td>
-
+              <td>{{ admission.departments }}</td>
               <td>{{ admission.program }}</td>
               <td>{{ admission.start_date }}</td>
               <td>{{ admission.end_date }}</td>
@@ -132,7 +134,7 @@
         
         <div class="col-6">
 
-          <h1>Received Merit Lists</h1>
+          <h3>Received Merit Lists</h3>
         </div>
 
       </div>

@@ -1,7 +1,13 @@
+from .views import ongoing_admissions
+from .views import get_campuses, get_programs, get_test_required
+from .views import get_campuses
+from .views import get_test_required
+from .views import get_programs, get_departments
+from .views import get_programs, get_departments
 from django.contrib import admin
 from django.urls import path
 from psapApp import views
-
+from .views import get_programs, get_departments, get_test_required, get_department_details
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('university_login/', views.university_login, name='university_login'),
@@ -41,7 +47,18 @@ urlpatterns = [
          views.close_admission, name='close_admission'),
     
 
-    #     path('apply_admissionSaveIntoTable/', views.apply_admissionSaveIntoTable,
-    #     name='apply_admissionSaveIntoTable'),
+    path('ongoing/', views.ongoing_admissions, name='ongoing_admissions'),
+    # AJAX endpoint to get programs for a selected university
+    path('get_programs/', get_programs, name='get_programs'),
+
+    # AJAX endpoint to get departments for a selected university and program
+    path('get_departments/', get_departments, name='get_departments'),
+
+    # AJAX endpoint to get campuses for a selected university
+    path('get_campuses/', views.get_campuses, name='get_campuses'),
+    # AJAX endpoint to get test required for a selected university
+    path('get_test_required/', get_test_required, name='get_test_required'),
+    path('get_department_details/', get_department_details,
+         name='get_department_details'),
 
 ]

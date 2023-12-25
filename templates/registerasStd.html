@@ -237,6 +237,7 @@
                   placeholder="03131234567"
                   class="form-control"
                   type="text"
+                  value="03"
                 />
               </div>
             </div>
@@ -737,10 +738,11 @@
       return false;
     }
 
-    // Check if phone number is a valid format (e.g., 123-456-7890)
-    var phonePattern = /^\d{3}-\d{3}-\d{4}$/;
+    // Check if phone number is a valid format (e.g., 03137887741)
+    var phonePattern = /^\d{11}$/;
+
     if (!phonePattern.test(phone)) {
-      alert("Please enter a valid phone number (e.g., 123-456-7890).");
+      alert("Please enter a valid 11-digit phone number.");
       return false;
     }
 
@@ -761,20 +763,20 @@
 
     // Check if matriculation obtained marks are a number between 0 and 1000
     var matricObtainedMarksValue = parseFloat(matricObtainedMarks);
-    if (isNaN(matricObtainedMarksValue) || matricObtainedMarksValue < 0 || matricObtainedMarksValue > 1000) {
+    if (isNaN(matricObtainedMarksValue) || matricObtainedMarksValue < 0 || matricObtainedMarksValue > 1100) {
       alert("Please enter a valid number for matriculation obtained marks between 0 and 1000.");
       return false;
     }
     // Check if intermediate obtained marks are a number between 0 and 1000
     var interObtainedMarksValue = parseFloat(interObtainedMarks);
-    if (isNaN(interObtainedMarksValue) || interObtainedMarksValue < 0 || interObtainedMarksValue > 1000) {
+    if (isNaN(interObtainedMarksValue) || interObtainedMarksValue < 0 || interObtainedMarksValue > 1100) {
       alert("Please enter a valid number for intermediate obtained marks between 0 and 1000.");
       return false;
     }
 
     // Check if matriculation total marks are a number between 0 and 1000
     var matricTotalMarksValue = parseFloat(matricTotalMarks);
-    if (isNaN(matricTotalMarksValue) || matricTotalMarksValue < 0 || matricTotalMarksValue > 1000) {
+    if (isNaN(matricTotalMarksValue) || matricTotalMarksValue < 0 || matricTotalMarksValue > 1100) {
       alert("Please enter a valid number for matriculation total marks between 0 and 1000.");
       return false;
     }

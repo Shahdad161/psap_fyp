@@ -1,0 +1,148 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ongoing Admissions</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            color: #333;
+            background-color: #f8f9fa;
+        }
+
+        .navbar {
+            background-color: #961E64;
+        }
+
+        #admissions-container {
+            background-color: #fff;
+            padding: 40px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            margin: 20px;
+        }
+
+        .admission-card {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+        }
+
+        h2 {
+            color: #961E64;
+            text-align: center;
+        }
+
+        h3 {
+            color: #333;
+            margin-bottom: 10px;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        .table {
+            margin-top: 10px; 
+        }
+
+        .table th {
+            background-color: #961e64;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+            background-color: #f8f9fa;
+        }
+
+        .table th, .table td {
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            font-size: 0.9rem;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        .main {
+            background-image: url("{% static 'img/bg_students.bbae6663.jpg' %}");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+    </style>
+</head>
+<body>
+    <div class="d-flex main justify-content-around">
+        <div id="admissions-container" class="container ">
+
+            <h2 class="mb-4">Ongoing Admissions</h2>
+
+            {% regroup ongoing_admissions by university_name as universities %}
+
+            {% for university in universities %}
+                <div class="admission-card mb-4" id="university-{{ university.grouper }}">
+                    <h3 class="view-btn" onclick="toggleTable('{{ university.grouper }}')">
+                        {{ university.grouper }} <small> &#9660;</small>
+                    </h3>
+                    <div class="table-responsive" id="table-{{ university.grouper }}" style="display: none;">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Program</th>
+                                    <th>Departments</th>
+                                    <th>Session</th>
+                                    <th>Required Students</th>
+                                    <th>Required Test</th>
+                                    <th>Merit Calculation</th>
+                                    <th>Application Fees</th>
+                                    <th>Admission Deadline</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for admission in university.list %}
+                                    <tr>
+                                        <td>{{ admission.program }}</td>
+                                        <td>{{ admission.departments }}</td>
+
+                                        <td>{{ admission.session }} {{ admission.start_date|date:"Y" }}</td>
+                                        <td>{{ admission.no_of_shortlisted_students }}</td>
+                                        <td>{{ admission.admission_test }}</td>
+                                        <td>
+                                            <div>Intermediate: {{ admission.intermediate_required_percentage }}%</div>
+                                            <div>Matric: {{ admission.bachelor_required_percentage }}%</div>
+                                            <div>Test: {{ admission.test_required_percentage }}%</div>
+                                        </td>
+                                        <td>{{ admission.application_fees }}</td>
+                                        <td>{{ admission.end_date }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        function toggleTable(universityId) {
+            var table = document.getElementById("table-" + universityId);
+            if (table.style.display === "none") {
+                table.style.display = "block";
+            } else {
+                table.style.display = "none";
+            }
+        }
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>
