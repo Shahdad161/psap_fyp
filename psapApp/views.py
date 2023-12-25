@@ -32,7 +32,35 @@ from django.shortcuts import render, HttpResponse
 from django.db import connection as conn
 
 from django.contrib import messages
+from io import BytesIO
+from django.http import HttpResponse
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from django.shortcuts import get_object_or_404
+from .models import StudentMeritData, Admission
+from django.http import Http404
 
+from django.http import HttpResponseNotFound
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import Admission, StudentMeritData  # Import your models
+
+from django.shortcuts import render, redirect
+from .models import Admission, AppliedForAdmissionForm
+
+from django.shortcuts import render
+from .models import StudentMeritData  # Import your StudentMeritData model
+# Import the StudentInfo model
+
+# views.py
+from django.shortcuts import render, redirect
+from .models import Testimonial
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import Testimonial  # Import your Testimonial model
 # Create your views here.
 
 # main page index file
@@ -74,10 +102,6 @@ def registerasStd(request):
     # Add your view logic here
     return render(request, 'registerasStd.html')
 
-from django.shortcuts import render
-from .models import StudentMeritData  # Import your StudentMeritData model
- # Import the StudentInfo model
-
 def stdHome(request):
     if request.session.get('authenticated') == True:
         email = request.session.get('email')
@@ -91,9 +115,6 @@ def stdHome(request):
 
         return render(request, 'stdHome.html', {'stdName': stdName, 'merit_data': merit_data})
 
-
-from django.shortcuts import render, redirect
-from .models import Admission, AppliedForAdmissionForm
 
 
 def stdApplied(request):
@@ -496,10 +517,6 @@ def announce_admissions(request):
 
     return render(request, 'uniHome.html', {'uniName': uniName})
 
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from .models import Admission, StudentMeritData  # Import your models
-
 # ... (previous code)
 
 # ... (previous code)
@@ -756,8 +773,6 @@ def apply_admission(request):
 
 # Merit calculation
 
-from django.http import HttpResponseNotFound
-
 def delete_merit_data(request, merit_id):
     try:
         merit_data = StudentMeritData.objects.get(pk=merit_id)
@@ -775,15 +790,6 @@ def delete_merit_data(request, merit_id):
 
 
 
-from io import BytesIO
-from django.http import HttpResponse
-from reportlab.lib.pagesizes import letter
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
-from reportlab.lib import colors
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from django.shortcuts import get_object_or_404
-from .models import StudentMeritData, Admission
-from django.http import Http404
 
 
 def download_merit_list(request, university_name, department, start_date):
@@ -895,12 +901,6 @@ def download_merit_list(request, university_name, department, start_date):
 
     return response
 
-# views.py
-from django.shortcuts import render, redirect
-from .models import Testimonial
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from .models import Testimonial  # Import your Testimonial model
 def submit_testimonial(request):
     if request.method == 'POST':
         # Retrieve data from the POST request
